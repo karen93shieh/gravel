@@ -12,7 +12,7 @@
 
 <main>
     <h1>Welcome to Gravel</h1>
-    <button on:click={goto("/login")}>Login</button>
+    <button onclick={goto("/login")}>Login</button>
 
 
 </main>
