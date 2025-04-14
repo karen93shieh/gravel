@@ -45,9 +45,9 @@ To install svelte/kit, run
 npm install
 ```
 
-To install skeleton, run
+To install lucid icon, run
 ```bash
-npm install @skeletonlabs/skeleton
+npm install lucide-svelte
 ```
 
 
