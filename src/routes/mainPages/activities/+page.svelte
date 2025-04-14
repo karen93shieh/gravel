@@ -6,5 +6,5 @@
 </style>
 
 <main>
-    <div class="activities">activities</div>
+    activities
 </main>

@@ -50,6 +50,12 @@ To install lucid icon, run
 npm install lucide-svelte
 ```
 
+<!-- To install background effect, run,
+```bash
+npm install three
+
+``` -->
+
 
 ## Documentation for Svelte/kit
 
