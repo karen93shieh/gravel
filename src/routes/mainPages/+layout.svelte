@@ -141,7 +141,7 @@
         <div class="bottom-tabs">
             <div class="tab" class:active={activeTab === 'profile'} on:click={() => { activeTab = 'profile'; goto('profile'); }}>
                 <User size="18" style="margin-right: 8px;" />
-                My Profile &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                My Profile &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
             </div>
             <div class="tab" class:active={activeTab === 'settings'} on:click={() => { activeTab = 'settings'; goto('setting'); }}>
                 <Settings size="18" style="margin-right: 8px;" />
