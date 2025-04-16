@@ -115,6 +115,6 @@
   <div id="particles-js"></div>
 
   <div class="title">Welcome to Gravel</div>
-  <div class="subtitle">Your Next Group Trip Planner</div>
+  <div class="subtitle">Your Next Group Travel Planner</div>
   <button class="loginBtn" on:click={() => goto("/mainPages/calendar")}>Login</button>
 </main>
