@@ -1,6 +1,6 @@
 <script>
     import { goto } from "$app/navigation";
-    import { Calendar, Megaphone, Activity, Users, User, Settings, LogOut, Plane } from 'lucide-svelte';
+    import { Calendar, Megaphone, Activity, Users, User, Settings, LogOut, Plane, Home } from 'lucide-svelte';
 
     let activeTab = "calendar";
 </script>
@@ -124,6 +124,12 @@
         <div class="logo" on:click={() => goto('/')}>
             GRAVEL
             <Plane size="24" style="margin-right: 8px;" />
+        </div>
+
+        <!-- Main tab -->
+        <div class="tab main" class:active={activeTab === 'main'} on:click={() => { activeTab = 'main'; goto('main'); }}>
+            <Home size="18" style="margin-right: 8px;" />
+            Main
         </div>
 
         <!-- Navigation tabs -->
