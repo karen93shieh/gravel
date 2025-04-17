@@ -14,7 +14,7 @@
 .NavBar {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch; /* stretch children to full width */
     background-color: #333;
     padding: 20px 10px;
     height: 100vh;
@@ -46,8 +46,8 @@
 /* Tabs styling */
 .tab {
     display: flex;
-    align-items: center;     /* vertically center icon and text */
-    gap: 8px;                /* space between icon and text */
+    align-items: center;
+    gap: 8px;
     padding: 15px 20px;
     cursor: pointer;
     color: white;
@@ -55,6 +55,7 @@
     text-align: left;
     transition: background-color 0.3s ease;
     width: 100%;
+    box-sizing: border-box;
 }
 
 .tab:hover {
@@ -66,19 +67,25 @@
     border-radius: 5px;
 }
 
+/* Specific active tab colors */
 .tab.active.calendar {
-    background-color: #0047ff ;
+    background-color: #0047ff;
 }
 .tab.active.announcements {
-    background-color: #5a32ff ;
-}  
+    background-color: #5a32ff;
+}
 .tab.active.activities {
-    background-color: #9020d5 ;
+    background-color: #9020d5;
 }
 .tab.active.people {
-    background-color: #b0008b ;
+    background-color: #b0008b;
 }
-
+.tab.active.profile {
+    background-color: #0077cc;
+}
+.tab.active.settings {
+    background-color: #5555aa;
+}
 
 /* Main content styling */
 .main-content {
@@ -88,8 +95,8 @@
 }
 
 /* Bottom navigation styling */
-.NavBar .bottom-tabs {
-    margin-top: auto;  /* Push these tabs to the bottom of the navbar */
+.bottom-tabs {
+    margin-top: auto;
 }
 
 /* Styling for the logout button */
@@ -103,6 +110,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    box-sizing: border-box;
 }
 
 .logout-btn:hover {
@@ -116,7 +124,6 @@
         <div class="logo" on:click={() => goto('/')}>
             GRAVEL
             <Plane size="24" style="margin-right: 8px;" />
-
         </div>
 
         <!-- Navigation tabs -->
@@ -139,11 +146,11 @@
 
         <!-- Bottom navigation tabs -->
         <div class="bottom-tabs">
-            <div class="tab" class:active={activeTab === 'profile'} on:click={() => { activeTab = 'profile'; goto('profile'); }}>
+            <div class="tab profile" class:active={activeTab === 'profile'} on:click={() => { activeTab = 'profile'; goto('profile'); }}>
                 <User size="18" style="margin-right: 8px;" />
-                My Profile &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+                My Profile 
             </div>
-            <div class="tab" class:active={activeTab === 'settings'} on:click={() => { activeTab = 'settings'; goto('setting'); }}>
+            <div class="tab settings" class:active={activeTab === 'settings'} on:click={() => { activeTab = 'settings'; goto('setting'); }}>
                 <Settings size="18" style="margin-right: 8px;" />
                 Settings
             </div>
