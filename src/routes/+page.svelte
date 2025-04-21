@@ -84,10 +84,37 @@
     animation-delay: 1s;
   }
 
-  .loginBtn {
-    right: 1%;
+  .login-container {
+    position: absolute;
     top: 2%;
-    padding: 12px 24px;
+    right: 10%;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .input-box {
+    padding: 8px 12px;
+    font-size: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    outline: none;
+    backdrop-filter: blur(10px);
+    transition: border-color 0.3s ease;
+    min-width: 100px;
+  }
+
+  .input-box::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .input-box:focus {
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+
+  .loginBtn {
+    padding: 8px 24px;
     font-size: 1rem;
     color: white;
     background: rgba(255, 255, 255, 0.1);
@@ -96,6 +123,7 @@
     backdrop-filter: blur(10px);
     cursor: pointer;
     transition: all 0.3s ease;
+    left: 105%;
   }
 
   .loginBtn:hover {
@@ -116,5 +144,21 @@
 
   <div class="title">Welcome to Gravel</div>
   <div class="subtitle">Your Next Group Travel Planner</div>
-  <button class="loginBtn" on:click={() => goto("/mainPages/calendar")}>Login</button>
+
+  <div class="login-container">
+    <input type="text" class="input-box" placeholder="Username" />
+    <input type="password" class="input-box" placeholder="Password" />
+    <button class="loginBtn" on:click={() => {
+      const username = document.querySelector('.input-box[type="text"]').value;
+      const password = document.querySelector('.input-box[type="password"]').value;
+
+      if (username && password) {
+        console.log(`Logging in with ${username}...`);
+        goto('/mainPages/main');
+      } else {
+        alert('Please enter both username and password.');
+      }
+    }
+    }>Login</button>
+  </div>
 </main>
