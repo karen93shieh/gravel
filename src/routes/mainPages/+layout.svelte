@@ -2,7 +2,7 @@
     import { goto } from "$app/navigation";
     import { Calendar, Megaphone, Activity, Users, User, Settings, LogOut, Plane, Home } from 'lucide-svelte';
 
-    let activeTab = "calendar";
+    let activeTab = "main";
 </script>
 
 <style>
