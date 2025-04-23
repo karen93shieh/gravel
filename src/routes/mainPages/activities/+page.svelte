@@ -68,6 +68,7 @@
         padding: 1rem;
         width: 300px; 
         background: #d5e8f7;
+        border-radius: 6px;
     }
 
     .button-container {
@@ -81,11 +82,43 @@
         padding: 0.5rem 1rem;
         background-color: purple;
         color: white;
+        border-radius: 6px; 
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
     .popup {
-        background: white;
+        position: relative;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #ffffff;
         padding: 2rem;
+        border-radius: 12px; /* Rounded corners */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+        width: 90%;
+        max-width: 400px; /* Limit the width */
+        z-index: 1000; /* Ensure it appears above other elements */
+    }
+
+    .popup h2 {
+        margin-top: 0;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+        color: #333;
+        text-align: center;
+    }
+
+    .popup input {
+        display: block;
+        width: 100%;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 1rem;
+        background: #f9f9f9;
+        outline: none;
+        transition: border-color 0.3s ease;
     }
 
     .popup .button {

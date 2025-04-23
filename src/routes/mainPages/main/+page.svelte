@@ -1,9 +1,44 @@
 <script>
     // Automatically available prop when using the `load()` function
-    export let tripSummary;
-    
-    // Log the tripSummary to check if it's working correctly
+    let tripSummary = {
+        "tripSummary": {
+            "location": {
+            "city": "Santa Monica",
+            "state": "California",
+            "country": "USA"
+            },
+            "dates": {
+            "startDate": "2025-05-15",
+            "endDate": "2025-05-20"
+            },
+            "daysUntilTrip": 30,
+            "weather": {
+            "forecast": {
+                "start": {
+                "temperature": {
+                    "high": 75,
+                    "low": 60
+                },
+                "conditions": "Sunny"
+                },
+                "end": {
+                "temperature": {
+                    "high": 78,
+                    "low": 62
+                },
+                "conditions": "Partly cloudy"
+                }
+            },
+            "average": {
+                "temperature": 72,
+                "conditions": "Mostly sunny"
+            }
+            }
+        }
+    }
+
     console.log(tripSummary);
+
 </script>
 
 <style>
