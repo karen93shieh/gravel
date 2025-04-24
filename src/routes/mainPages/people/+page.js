@@ -74,7 +74,7 @@ const PEOPLE = [
   }
 ].map((person, idx) => ({
   ...person,
-  photo: `static/images/${FILE_NAMES[idx]}`
+  photo: `../images/${FILE_NAMES[idx]}`
 }));;
 
 // /images/${FILE_NAMES[idx]}`     // ← add a unique random image
