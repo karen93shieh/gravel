@@ -1,5 +1,5 @@
 const BASE_PHOTO_URL = 'https://source.unsplash.com/80x80/?portrait&sig=';
-const FILE_NAMES = ['alice.avif', 'ben.avif', 'carlos.avif', 'diana.avif'];
+const FILE_NAMES = ['alice.jpeg', 'ben.jpeg', 'carlos.jpeg', 'diana.jpeg'];
 
 
 const PEOPLE = [
@@ -22,11 +22,11 @@ const PEOPLE = [
       "Can't wait to spend time with the whole fam! Hoping to sneak in a few beach runs and lots of good food (as long as it’s dairy‑free 😅)."
   },
   {
-    "name": "Ben Thompson",
+    "name": "Ben Yeung",
     "age": 34,
     "email": "ben.thompson@example.com",
     "dietaryRestrictions": [],
-    "parents": ["Robert Thompson", "Julia Thompson"],
+    "parents": ["Robert Yeung", "Julia Yeung"],
     "siblings": [],
     "hotel": "Grand Sunset Resort",
     "arrivalDate": "2025-07-14",
@@ -39,12 +39,12 @@ const PEOPLE = [
     "aboutMe": "Excited for some quality cousin time and dad jokes around the fire pit. Somebody bring Uno!"
   },
   {
-    "name": "Carlos Rivera",
+    "name": "Carlos Yang",
     "age": 22,
     "email": "carlos.rivera@example.com",
     "dietaryRestrictions": ["gluten-free"],
-    "parents": ["Antonio Rivera", "Marisol Rivera"],
-    "siblings": ["Sofia Rivera", "Luis Rivera"],
+    "parents": ["Antonio Yang", "Marisol Yang"],
+    "siblings": ["Sofia Yang", "Luis Yang"],
     "hotel": "Seaside Inn",
     "arrivalDate": "2025-07-16",
     "flightInfo": {
@@ -56,11 +56,11 @@ const PEOPLE = [
     "aboutMe": "Just here for the snacks and the chaos. Let’s get a big cousins photo this year!"
   },
   {
-    "name": "Diana Smith",
+    "name": "Diana Wu",
     "age": 45,
     "email": "diana.smith@example.com",
     "dietaryRestrictions": ["vegan", "no peanuts"],
-    "parents": ["Margaret Lane"],
+    "parents": ["Margaret Wu"],
     "siblings": [],
     "hotel": "Grand Sunset Resort",
     "arrivalDate": "2025-07-15",
@@ -76,8 +76,6 @@ const PEOPLE = [
   ...person,
   photo: `../images/${FILE_NAMES[idx]}`
 }));;
-
-// /images/${FILE_NAMES[idx]}`     // ← add a unique random image
 
 /** @type {import('./$types').PageLoad} */
 
