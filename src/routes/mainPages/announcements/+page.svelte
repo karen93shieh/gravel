@@ -7,18 +7,35 @@
       });
     }
   
-    let announcements = [
-      {
-        title: "Dinner in 30 minutes",
-        details: "Meet at the Hotel la Villa lobby at 8:00 pm.",
-        timestamp: getCurrentTimestamp()
-      },
-      {
-        title: "Beach anyone in 5 minutes?",
-        details: "bring sunscreen pls!",
-        timestamp: getCurrentTimestamp()
+    let announcements = [];
+  
+    // Load announcements from localStorage on mount
+    onMount(() => {
+      const saved = localStorage.getItem('announcements');
+      if (saved) {
+        announcements = JSON.parse(saved);
+      } else {
+        announcements = [
+          {
+            title: "Dinner in 30 minutes",
+            details: "Meet at the Hotel la Villa lobby at 8:00 pm.",
+            timestamp: getCurrentTimestamp()
+          },
+          {
+            title: "Beach anyone in 5 minutes?",
+            details: "bring sunscreen pls!",
+            timestamp: getCurrentTimestamp()
+          }
+        ];
+        saveAnnouncements();
       }
-    ];
+    });
+  
+    import { onMount } from 'svelte';
+  
+    function saveAnnouncements() {
+      localStorage.setItem('announcements', JSON.stringify(announcements));
+    }
   
     let showForm = false;
     let titleInput = '';
@@ -44,20 +61,28 @@
             timestamp: getCurrentTimestamp()
           }
         ];
+        saveAnnouncements();
         closeForm();
       }
+    }
+  
+    function deleteAnnouncement(index) {
+      announcements = announcements.filter((_, i) => i !== index);
+      saveAnnouncements();
     }
   </script>
   
   <main class="container">
     <div class="announcement-header">
+      <div></div>
       <h1 class="title">Announcements</h1>
       <button class="new-btn" on:click={openForm}>+ New</button>
     </div>
   
     <div id="announcementsList">
-      {#each announcements as announcement}
+      {#each announcements as announcement, index}
         <div class="announcement-box">
+          <button class="delete-btn" on:click={() => deleteAnnouncement(index)}>×</button>
           <h3>{announcement.title}</h3>
           <p>{announcement.details}</p>
           <p class="timestamp">{announcement.timestamp}</p>
@@ -90,11 +115,9 @@
       grid-template-columns: 1fr auto 1fr;
       align-items: center;
       margin-bottom: 2rem;
-      position: relative;
     }
   
     .title {
-      grid-column: 2;
       text-align: center;
       font-size: 2.5rem;
       color: black;
@@ -102,7 +125,6 @@
     }
   
     .new-btn {
-      grid-column: 3;
       justify-self: end;
       background-color: #8a2be2;
       color: white;
@@ -115,6 +137,7 @@
     }
   
     .announcement-box {
+      position: relative;
       background: #ffffff;
       padding: 1.25rem;
       margin-top: 1rem;
@@ -133,6 +156,23 @@
       font-size: 0.85rem;
       color: #1976d2;
       margin-top: 0.75rem;
+    }
+  
+    .delete-btn {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: transparent;
+      border: none;
+      color: #8a2be2;
+      font-size: 1.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      line-height: 1;
+    }
+  
+    .delete-btn:hover {
+      color: #6b21a8;
     }
   
     #announcementForm {
