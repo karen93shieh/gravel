@@ -34,70 +34,133 @@
 </script>
 
 <style>
-    .vote-section {
+    main {
+        padding: 2rem;
+        margin: 0 auto;
+    }
+
+    .header {
         display: flex;
+        justify-content: center; 
         align-items: center;
+        margin-bottom: 2rem;
+        position: relative; 
     }
 
-    .vote-button {
-        font-size: 1.5rem;
-    }
-
-    .vote-button:hover {
-        transform: scale(1.2);
-    }
-
-    .vote-count {
-        margin-left: 0.5rem;
-        font-size: 1.2rem;
-    }
-
-    h1 {
+    .title {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #333;
         text-align: center;
+    }
+
+    .create-button {
+        position: absolute;
+        right: 0;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        font-weight: bold;
+        color: white;
+        background-color: #8a2be2;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .create-button:hover {
+        background-color: #6a1bbd;
+        transform: translateY(-2px);
     }
 
     .activity-container {
         display: flex;
         flex-wrap: wrap;
-        gap: 1rem;
+        gap: 1.5rem;
         justify-content: center;
     }
 
     .activity-box {
-        border: 1px solid black;
-        padding: 1rem;
-        width: 300px; 
-        background: #d5e8f7;
-        border-radius: 6px;
+        border: 1px solid #ccc;
+        padding: 1.5rem;
+        width: 280px;
+        border-left: 8px solid #8a2be2;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .button-container {
+    .activity-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .activity-box h3 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.25rem;
+        color: #1976d2;
+        text-align: center;
+    }
+
+    .activity-box p {
+        margin: 0.5rem 0;
+        font-size: 1rem;
+        color: #555;
+        text-align: center;
+    }
+
+    .vote-section {
         display: flex;
-        justify-content: center; 
-        margin-top: 2rem;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1rem;
     }
 
-    .button {
-        margin-top: 1rem;
-        padding: 0.5rem 1rem;
-        background-color: purple;
+    .vote-button {
+        background: #8a2be2;
         color: white;
-        border-radius: 6px; 
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        border: none;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .vote-button:hover {
+        background: #6a1bbd;
+        transform: scale(1.1);
+    }
+
+    .vote-button.selected {
+        background: #1976d2;
+    }
+
+    .vote-count {
+        margin-left: 0.5rem;
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #1976d2;
     }
 
     .popup {
-        position: relative;
+        position: fixed;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: #ffffff;
+        background: white;
         padding: 2rem;
-        border-radius: 12px; /* Rounded corners */
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         width: 90%;
-        max-width: 400px; /* Limit the width */
-        z-index: 1000; /* Ensure it appears above other elements */
+        max-width: 400px;
+        z-index: 1000;
     }
 
     .popup h2 {
@@ -121,14 +184,57 @@
         transition: border-color 0.3s ease;
     }
 
+    .popup input:focus {
+        border-color: #8a2be2;
+    }
+
     .popup .button {
-        margin-top: 1rem;
+        display: block;
         width: 100%;
+        padding: 0.75rem;
+        font-size: 1rem;
+        font-weight: bold;
+        color: white;
+        background-color: #8a2be2;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .popup .button:hover {
+        background-color: #6a1bbd;
+        transform: translateY(-2px);
+    }
+
+    .popup .button.cancel {
+        background-color: #ccc;
+        color: #333;
+        margin-top: 0.5rem;
+    }
+
+    .popup .button.cancel:hover {
+        background-color: #bbb;
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
     }
 </style>
 
 <main>
-    <h1>Activity Voting Page</h1>
+    <div class="header">
+        <h1 class="title">Activity Voting Page</h1>
+        <button class="create-button" on:click={() => (showCreatePopup = true)}>
+            + Create New Activity
+        </button>
+    </div>
 
     <div class="activity-container">
         {#each $activities as activity}
@@ -149,13 +255,8 @@
         {/each}
     </div>
 
-    <div class="button-container">
-        <button class="button" on:click={() => (showCreatePopup = true)}>
-            Create New Activity
-        </button>
-    </div>
-
     {#if showCreatePopup}
+        <div class="overlay"></div>
         <div class="popup">
             <h2>Create New Activity</h2>
             <input
@@ -176,7 +277,7 @@
             <button class="button" on:click={createActivity}>
                 Create
             </button>
-            <button class="button" on:click={() => (showCreatePopup = false)}>
+            <button class="button cancel" on:click={() => (showCreatePopup = false)}>
                 Cancel
             </button>
         </div>
