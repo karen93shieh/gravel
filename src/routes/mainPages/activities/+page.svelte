@@ -22,13 +22,40 @@
     };
 
     const createActivity = () => {
-        if (newActivity.title && newActivity.description && newActivity.price) {
+        if (newActivity.title && newActivity.description && newActivity.price >= 0) {
             activities.update((list) => [
                 ...list,
                 { id: Date.now(), ...newActivity, votes: 0 }
             ]);
             newActivity = { title: '', description: '', price: '' };
             showCreatePopup = false;
+        }
+    };
+
+    const suggestActivity = async () => {
+        try {
+            const response = await fetch(
+                'https://noggin.rea.gent/fierce-cheetah-8297',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: 'Bearer rg_v1_v8x4v0intklea8f9tnhwq3r0rd0lvglgcd3t_ngk',
+                    },
+                    body: JSON.stringify({
+                        location: "Santa Monica",
+                        activities: $activities.map((activity) => activity.title).join(', '),
+                    }),
+                }
+            );
+            let suggestedActivity = await response.text();
+            suggestedActivity = JSON.parse(suggestedActivity);
+
+            newActivity.title = suggestedActivity.name || '';
+            newActivity.description = suggestedActivity.description || '';
+            newActivity.price = suggestedActivity.price || 0;
+        } catch (error) {
+            console.error('Error suggesting activity:', error);
         }
     };
 </script>
@@ -226,6 +253,14 @@
         background: rgba(0, 0, 0, 0.5);
         z-index: 999;
     }
+    .popup .button.suggest {
+        background-color: #1976d2; /* Blue color for the suggest button */
+        margin-top: 0.5rem;
+    }
+
+    .popup .button.suggest:hover {
+        background-color: #155a9c; /* Darker blue on hover */
+    }
 </style>
 
 <main>
@@ -276,6 +311,9 @@
             />
             <button class="button" on:click={createActivity}>
                 Create
+            </button>
+            <button class="button suggest" on:click={suggestActivity}>
+                Suggest Activity
             </button>
             <button class="button cancel" on:click={() => (showCreatePopup = false)}>
                 Cancel
