@@ -21,13 +21,13 @@
           {
             title: "Dinner in 30 minutes",
             details: "Meet at the Hotel la Villa lobby at 8:00 pm.",
-            name: "George",
+            name: "Sarah",
             timestamp: getCurrentTimestamp()
           },
           {
             title: "Beach anyone in 5 minutes?",
             details: "bring sunscreen pls!",
-            name: "Elisa",
+            name: "Chelsea",
             timestamp: getCurrentTimestamp()
           }
         ];
@@ -42,7 +42,6 @@
     let showForm = false;
     let titleInput = '';
     let detailsInput = '';
-    let nameInput = '';
   
     function openForm() {
       showForm = true;
@@ -52,17 +51,16 @@
       showForm = false;
       titleInput = '';
       detailsInput = '';
-      nameInput = '';
     }
   
     function addAnnouncement() {
-      if (titleInput.trim() && detailsInput.trim() && nameInput.trim()) {
+      if (titleInput.trim() && detailsInput.trim()) {
         announcements = [
           ...announcements,
           {
             title: titleInput,
             details: detailsInput,
-            name: nameInput,
+            name: "Amy",
             timestamp: getCurrentTimestamp()
           }
         ];
@@ -100,7 +98,6 @@
         <div class="overlay" on:click={closeForm}></div>
         <div id="announcementForm">
             <h2>New Announcement</h2>
-            <input type="text" bind:value={nameInput} placeholder="Your name" />
             <input type="text" bind:value={titleInput} placeholder="Title" />
             <textarea rows="4" bind:value={detailsInput} placeholder="Details..." />
             <div>
