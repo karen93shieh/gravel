@@ -1,6 +1,7 @@
 <script>
     import { onMount } from 'svelte';
     import { writable } from 'svelte/store';
+    import '../../../styles/main.css';
 
     let activities = writable([
         { id: 1, title: 'Hiking', description: 'Explore the mountains.', price: '$20', votes: 0 },
@@ -61,82 +62,6 @@
 </script>
 
 <style>
-    main {
-        padding: 2rem;
-        margin: 0 auto;
-    }
-
-    .header {
-        display: flex;
-        justify-content: center; 
-        align-items: center;
-        margin-bottom: 2rem;
-        position: relative; 
-    }
-
-    .title {
-        font-size: 2rem;
-        font-weight: bold;
-        color: #333;
-        text-align: center;
-    }
-
-    .create-button {
-        position: absolute;
-        right: 0;
-        padding: 0.5rem 1rem;
-        font-size: 1rem;
-        font-weight: bold;
-        color: white;
-        background-color: #8a2be2;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .create-button:hover {
-        background-color: #6a1bbd;
-        transform: translateY(-2px);
-    }
-
-    .activity-container {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1.5rem;
-        justify-content: center;
-    }
-
-    .activity-box {
-        border: 1px solid #ccc;
-        padding: 1.5rem;
-        width: 280px;
-        border-left: 8px solid #8a2be2;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .activity-box:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    .activity-box h3 {
-        margin: 0 0 0.5rem 0;
-        font-size: 1.25rem;
-        color: #1976d2;
-        text-align: center;
-    }
-
-    .activity-box p {
-        margin: 0.5rem 0;
-        font-size: 1rem;
-        color: #555;
-        text-align: center;
-    }
 
     .vote-section {
         display: flex;
@@ -175,105 +100,19 @@
         font-weight: bold;
         color: #1976d2;
     }
-
-    .popup {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: white;
-        padding: 2rem;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        width: 90%;
-        max-width: 400px;
-        z-index: 1000;
-    }
-
-    .popup h2 {
-        margin-top: 0;
-        margin-bottom: 1rem;
-        font-size: 1.5rem;
-        color: #333;
-        text-align: center;
-    }
-
-    .popup input {
-        display: block;
-        width: 100%;
-        padding: 0.75rem;
-        margin-bottom: 1rem;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        font-size: 1rem;
-        background: #f9f9f9;
-        outline: none;
-        transition: border-color 0.3s ease;
-    }
-
-    .popup input:focus {
-        border-color: #8a2be2;
-    }
-
-    .popup .button {
-        display: block;
-        width: 100%;
-        padding: 0.75rem;
-        font-size: 1rem;
-        font-weight: bold;
-        color: white;
-        background-color: #8a2be2;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-
-    .popup .button:hover {
-        background-color: #6a1bbd;
-        transform: translateY(-2px);
-    }
-
-    .popup .button.cancel {
-        background-color: #ccc;
-        color: #333;
-        margin-top: 0.5rem;
-    }
-
-    .popup .button.cancel:hover {
-        background-color: #bbb;
-    }
-
-    .overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 999;
-    }
-    .popup .button.suggest {
-        background-color: #1976d2; /* Blue color for the suggest button */
-        margin-top: 0.5rem;
-    }
-
-    .popup .button.suggest:hover {
-        background-color: #155a9c; /* Darker blue on hover */
-    }
 </style>
 
 <main>
     <div class="header">
-        <h1 class="title">Activity Voting Page</h1>
+        <h1 class="title">Activity Voting</h1>
         <button class="create-button" on:click={() => (showCreatePopup = true)}>
             + Create New Activity
         </button>
     </div>
 
-    <div class="activity-container">
+    <div class="three-col-container">
         {#each $activities as activity}
-            <div class="activity-box">
+            <div class="small-content-box">
                 <h3>{activity.title}</h3>
                 <p>{activity.description}</p>
                 <p>Price: {activity.price}</p>
