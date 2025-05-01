@@ -134,6 +134,7 @@
     background: #fdfdfd;
     border-radius: 1rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-left: 8px solid #8a2be2;
   }
 
   .profile-form {
@@ -160,6 +161,7 @@
     border-radius: 6px;
     font-size: 1rem;
     background-color: #f9f9f9;
+    
   }
 
   input[readonly],
@@ -167,6 +169,7 @@
     background-color: #eaeaea;
     color: #555;
     border: 1px solid #ddd;
+    
   }
 
   button {
