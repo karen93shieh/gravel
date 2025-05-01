@@ -10,21 +10,72 @@
 
 	const openProfile = (person) => { selectedPerson = person; showModal = true; };
 	const closeModal = () => { showModal = false; selectedPerson = null; };
+
+  async function sharePage() {
+    const pageUrl = window.location.href; // Get the current page URL
+    const pageTitle = "Check out this People page!";
+
+    if (navigator.share) {
+      // Use the Web Share API if available
+      try {
+        await navigator.share({
+          title: pageTitle,
+          url: pageUrl
+        });
+        alert("Page link shared successfully!");
+      } catch (error) {
+        console.error("Error sharing the page:", error);
+      }
+    } else {
+      // Fallback: Copy the link to the clipboard
+      try {
+        await navigator.clipboard.writeText(pageUrl);
+        alert("Page link copied to clipboard!");
+      } catch (error) {
+        console.error("Error copying the link:", error);
+        alert("Failed to copy the link. Please copy it manually.");
+      }
+    }
+  }
+
 </script>
 
+
 <style>
+ /* :global(body) {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom, #dbeafe, #f3e8ff, #fde7f7);
+      color: #333;
+    } */
+
+/* Page Layout */
+  .page-container {
+    position: relative;
+    padding: 2rem;
+  }
+
   .profile-container {
     display: flex;
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+    gap: 1rem;
   }
 
   .profile-card {
-    background-color: #f7f7f7;
-    padding: 20px;
+    width: 250px;
+    height: 250px;
     border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+
+    flex-direction: column;
+    text-align: center;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 10px 20px rgba(137, 43, 226, 0.2);
+    background-color: white;
+    padding: 20px;
+   
+    
   }
 
   .profile-card img {
@@ -32,16 +83,19 @@
     height: 150px;
     object-fit: cover;
     border-radius: 10px 10px 0 0;
+
   }
 
   .profile-card h3 {
     font-size: 18px;
     margin-bottom: 10px;
+    
   }
 
   .profile-card p {
     font-size: 14px;
     color: #666;
+    
   }
 
    .modal {
@@ -104,14 +158,131 @@
     font-size: 1.2rem;
     cursor: pointer;
   }
+
+  .invite-button {
+    background: #8a2be2;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .invite-button:hover {
+    background: #218838;
+  }
+
+  .header {
+        display: flex;
+        justify-content: center; 
+        align-items: center;
+        margin-bottom: 2rem;
+        position: relative; 
+    }
+
+    .title {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #333;
+        text-align: center;
+    }
+
+    .create-button {
+        position: absolute;
+        right: 0;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        font-weight: bold;
+        color: white;
+        background-color: #8a2be2;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .create-button:hover {
+        background-color: #6a1bbd;
+        transform: translateY(-2px);
+    }
+
+ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    position: relative;
+    margin: 1rem 0;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .hover-button {
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  li:hover .hover-button {
+    display: inline-block;
+  }
+
+  .hover-button:hover {
+    background: #0056b3;
+  }
+
+  /* View Profile Button */
+  .view-profile-button {
+    background: #8a2be2;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s ease;
+  }
+
+  .view-profile-button:hover {
+    background: #0056b3;
+  }
 </style>
+
+<div class = "header">
+  <h1 class = "title">People on this Trip</h1>
+  <button class="invite-button" on:click={sharePage}>Invite Friends</button>
+
+</div>
 
 <div class="profile-container">
   {#each people as person}
+  <li>
     <div class="profile-card" on:click={() => openProfile(person)}>
       <img src={person.photo} alt={person.name} />
       <h3>{person.name}</h3>
+      <button class="view-profile-button" on:click={() => openProfile(person)}>View Profile</button>
+
     </div>
+    </li>
   {/each}
 </div>
 
