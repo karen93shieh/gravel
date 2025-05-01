@@ -1,4 +1,6 @@
 <script>
+    import { onMount } from 'svelte';
+  
     function getCurrentTimestamp() {
       const now = new Date();
       return now.toLocaleString(undefined, {
@@ -19,19 +21,19 @@
           {
             title: "Dinner in 30 minutes",
             details: "Meet at the Hotel la Villa lobby at 8:00 pm.",
+            name: "George",
             timestamp: getCurrentTimestamp()
           },
           {
             title: "Beach anyone in 5 minutes?",
             details: "bring sunscreen pls!",
+            name: "Elisa",
             timestamp: getCurrentTimestamp()
           }
         ];
         saveAnnouncements();
       }
     });
-  
-    import { onMount } from 'svelte';
   
     function saveAnnouncements() {
       localStorage.setItem('announcements', JSON.stringify(announcements));
@@ -40,6 +42,7 @@
     let showForm = false;
     let titleInput = '';
     let detailsInput = '';
+    let nameInput = '';
   
     function openForm() {
       showForm = true;
@@ -49,15 +52,17 @@
       showForm = false;
       titleInput = '';
       detailsInput = '';
+      nameInput = '';
     }
   
     function addAnnouncement() {
-      if (titleInput.trim() && detailsInput.trim()) {
+      if (titleInput.trim() && detailsInput.trim() && nameInput.trim()) {
         announcements = [
           ...announcements,
           {
             title: titleInput,
             details: detailsInput,
+            name: nameInput,
             timestamp: getCurrentTimestamp()
           }
         ];
@@ -85,22 +90,26 @@
           <button class="delete-btn" on:click={() => deleteAnnouncement(index)}>×</button>
           <h3>{announcement.title}</h3>
           <p>{announcement.details}</p>
+          <p class="announcer">— {announcement.name}</p>
           <p class="timestamp">{announcement.timestamp}</p>
         </div>
       {/each}
     </div>
   
     {#if showForm}
-      <div id="announcementForm">
-        <h2>New Announcement</h2>
-        <input type="text" bind:value={titleInput} placeholder="Title" />
-        <textarea rows="4" bind:value={detailsInput} placeholder="Details..." />
-        <div>
-          <button on:click={addAnnouncement}>Add</button>
-          <button class="cancel" on:click={closeForm}>Cancel</button>
+        <div class="overlay" on:click={closeForm}></div>
+        <div id="announcementForm">
+            <h2>New Announcement</h2>
+            <input type="text" bind:value={nameInput} placeholder="Your name" />
+            <input type="text" bind:value={titleInput} placeholder="Title" />
+            <textarea rows="4" bind:value={detailsInput} placeholder="Details..." />
+            <div>
+            <button on:click={addAnnouncement}>Add</button>
+            <button class="cancel" on:click={closeForm}>Cancel</button>
+            </div>
         </div>
-      </div>
-    {/if}
+     {/if}
+
   </main>
   
   <style>
@@ -152,10 +161,19 @@
       font-weight: bold;
     }
   
-    .announcement-box .timestamp {
+    .announcement-box p {
+      margin: 0.25rem 0;
+    }
+  
+    .announcer {
+      font-style: italic;
+      color: #555;
+    }
+  
+    .timestamp {
       font-size: 0.85rem;
       color: #1976d2;
-      margin-top: 0.75rem;
+      margin-top: 0.5rem;
     }
   
     .delete-btn {
@@ -218,5 +236,16 @@
       background-color: #8a2be2;
       margin-left: 0.5rem;
     }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 5;
+    }
+
   </style>
   

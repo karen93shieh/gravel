@@ -32,7 +32,8 @@
     return dates;
   };
 
-  const formatDate = (date) => date.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+  const formatDate = (date) =>
+    date.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
 
   function goBack() {
     if (view === 'day') {
@@ -51,24 +52,27 @@
     }
     startDate = new Date(startDate);
   }
+
+  // Show most recent announcement
+  let latestAnnouncement = null;
+
+  import { onMount } from 'svelte';
+
+  onMount(() => {
+    const saved = localStorage.getItem('announcements');
+    if (saved) {
+      const announcements = JSON.parse(saved);
+      if (announcements.length > 0) {
+        latestAnnouncement = announcements[announcements.length - 1];
+      }
+    }
+  });
 </script>
 
 <div class="top-bar">
   <div class="view-controls">
-    <button
-      class="day-btn"
-      class:selected={view === 'day'}
-      on:click={() => view = 'day'}
-    >
-      Day
-    </button>
-    <button
-      class="week-btn"
-      class:selected={view === 'week'}
-      on:click={() => view = 'week'}
-    >
-      Week
-    </button>
+    <button class="day-btn" class:selected={view === 'day'} on:click={() => (view = 'day')}>Day</button>
+    <button class="week-btn" class:selected={view === 'week'} on:click={() => (view = 'week')}>Week</button>
   </div>
 
   <div class="nav-controls">
@@ -76,6 +80,15 @@
     <button on:click={goForward}>Next &rarr;</button>
   </div>
 </div>
+
+{#if latestAnnouncement}
+  <div class="latest-announcement">
+    <h3>{latestAnnouncement.title}</h3>
+    <p>{latestAnnouncement.details}</p>
+    <p class="announcer">— {latestAnnouncement.name}</p>
+    <p class="timestamp">{latestAnnouncement.timestamp}</p>
+  </div>
+{/if}
 
 {#if view === 'week'}
   <div class="calendar-grid week-view">
@@ -94,14 +107,17 @@
             {#each activities.filter(a =>
               a.date.toDateString() === date.toDateString() &&
               a.startHour === hour) as activity}
-              <div class="activity" style="background-color: {activity.color}; height: {(activity.endHour - activity.startHour) * 100}%;">{activity.title}</div>
+              <div
+                class="activity"
+                style="background-color: {activity.color}; height: {(activity.endHour - activity.startHour) * 100}%;">
+                {activity.title}
+              </div>
             {/each}
           </div>
         {/each}
       </div>
     {/each}
   </div>
-
 {:else if view === 'day'}
   <div class="calendar-grid day-view">
     <div class="header-row">
@@ -116,7 +132,11 @@
           {#each activities.filter(a =>
             a.date.toDateString() === startDate.toDateString() &&
             a.startHour === hour) as activity}
-            <div class="activity" style="background-color: {activity.color}; height: {(activity.endHour - activity.startHour) * 100}%;">{activity.title}</div>
+            <div
+              class="activity"
+              style="background-color: {activity.color}; height: {(activity.endHour - activity.startHour) * 100}%;">
+              {activity.title}
+            </div>
           {/each}
         </div>
       </div>
@@ -151,11 +171,11 @@
   }
 
   .view-controls .day-btn {
-    background-color: #e3d7f4; /* former week color */
+    background-color: #e3d7f4;
   }
 
   .view-controls .week-btn {
-    background-color: #d5e8f7; /* former month color */
+    background-color: #d5e8f7;
   }
 
   .view-controls button.selected {
@@ -186,11 +206,11 @@
   }
 
   .week-view {
-    background: #d5e8f7; /* from month-view */
+    background: #d5e8f7;
   }
 
   .day-view {
-    background: #e3d7f4; /* from week-view */
+    background: #e3d7f4;
   }
 
   .header-row {
@@ -245,5 +265,31 @@
 
   .calendar-grid.day-view .time-row {
     grid-template-columns: 80px 1fr;
+  }
+
+  .latest-announcement {
+    position: relative;
+    background: #ffffff;
+    padding: 1.25rem;
+    margin-top: 1rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 8px rgba(138, 43, 226, 0.15);
+    border-left: 8px solid #8a2be2;
+  }
+
+  .latest-announcement h3 {
+    margin: 0 0 0.5rem 0;
+    color: #1976d2;
+  }
+
+  .latest-announcement .timestamp {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: #1976d2;
+  }
+
+  .announcer {
+    font-style: italic;
+    color: #555;
   }
 </style>
