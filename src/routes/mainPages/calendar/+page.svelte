@@ -16,6 +16,20 @@
       startHour: 10,
       endHour: 11,
       color: '#FF00FF',
+    },
+    {
+      title: 'Lunch',
+      date: new Date(),
+      startHour: 12,
+      endHour: 13.5,
+      color: '#00FF00',
+    },
+    {
+      title: 'Team Review',
+      date: new Date(),
+      startHour: 14,
+      endHour: 16,
+      color: '#FF5733',
     }
   ];
 
@@ -106,10 +120,11 @@
           <div class="calendar-cell">
             {#each activities.filter(a =>
               a.date.toDateString() === date.toDateString() &&
-              a.startHour === hour) as activity}
+              a.startHour <= hour && a.endHour > hour) as activity}
               <div
                 class="activity"
-                style="background-color: {activity.color}; height: {(activity.endHour - activity.startHour) * 100}%;">
+                style="background-color: {activity.color}; height: {(activity.endHour - activity.startHour) * 100}%; top: {(activity.startHour - hour) * 100}%;"
+              >
                 {activity.title}
               </div>
             {/each}
@@ -131,10 +146,11 @@
         <div class="calendar-cell">
           {#each activities.filter(a =>
             a.date.toDateString() === startDate.toDateString() &&
-            a.startHour === hour) as activity}
+            a.startHour <= hour && a.endHour > hour) as activity}
             <div
               class="activity"
-              style="background-color: {activity.color}; height: {(activity.endHour - activity.startHour) * 100}%;">
+              style="background-color: {activity.color}; height: {(activity.endHour - activity.startHour) * 100}%; top: {(activity.startHour - hour) * 100}%;"
+            >
               {activity.title}
             </div>
           {/each}
