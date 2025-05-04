@@ -3,7 +3,7 @@
   
   let editing = false;
   let profile = {
-    name: '',
+    name: 'Amy',
     age: '',
     email: '',
     dietary: '',
