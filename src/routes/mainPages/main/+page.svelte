@@ -1,47 +1,27 @@
 <script>
-    let tripSummary = {
-      tripSummary: {
-        location: {
-          city: "Santa Monica",
-          state: "California",
-          country: "USA"
-        },
-        dates: {
-          startDate: "2025-05-15",
-          endDate: "2025-05-20"
-        },
-        weather: {
-          forecast: {
-            start: {
-              temperature: {
-                high: 75,
-                low: 60
-              },
-              conditions: "Sunny"
-            },
-            end: {
-              temperature: {
-                high: 78,
-                low: 62
-              },
-              conditions: "Partly cloudy"
-            }
-          },
-          average: {
-            temperature: 72,
-            conditions: "Mostly sunny"
-          }
-        }
-      }
-    };
-  
-    const { location, dates, weather } = tripSummary.tripSummary;
-  
-    // ✅ Calculate "days until trip" dynamically
+      import { tripData } from '$lib/stores/Stores.ts';
+  import { onDestroy } from 'svelte';
+
+  let data;
+  const unsubscribe = tripData.subscribe(value => {
+    data = value;
+  });
+
+  onDestroy(unsubscribe);
+
+  // destructure the data
+  $: location = data?.location;
+  $: dates = data?.dates;
+  $: weather = data?.weather;
+
+  // calculate days until trip
+  $: daysUntilTrip = (() => {
+    if (!dates) return 0;
     const today = new Date();
     const startDate = new Date(dates.startDate);
-    const timeDiff = startDate.getTime() - today.getTime();
-    const daysUntilTrip = Math.max(0, Math.ceil(timeDiff / (1000 * 60 * 60 * 24))); // No negative days
+    const diff = startDate.getTime() - today.getTime();
+    return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+  })();
   </script>
   
   <main class="container">

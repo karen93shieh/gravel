@@ -1,5 +1,6 @@
 <script>
     import { goto } from "$app/navigation";
+    import { tripName } from "$lib/stores/Stores.ts";
     import { Calendar, Megaphone, Activity, Users, User, Settings, LogOut, Plane, Home } from 'lucide-svelte';
 
     let activeTab = "main";
@@ -116,6 +117,16 @@
 .logout-btn:hover {
     background-color: #e74c3c;
 }
+.trip-select {
+    margin-left: auto;
+    background: #222;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    font-weight: bold;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
 </style>
 
 <div class="page-layout">
@@ -124,6 +135,15 @@
         <div class="logo" on:click={() => goto('/')}>
             GRAVEL
             <Plane size="24" style="margin-right: 8px;" />
+            <select
+                class="trip-select"
+                bind:value={$tripName}
+                on:click|stopPropagation
+                >
+                <option>Santa Monica</option>
+                <option>Vancouver</option>
+                <option>Tokyo</option>
+            </select>
         </div>
 
         <!-- Main tab -->

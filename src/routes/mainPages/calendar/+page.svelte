@@ -146,10 +146,10 @@
 
 <style>
   :global(body) {
-    margin: 0;
+    /* margin: 0;
     font-family: system-ui, sans-serif;
     background: beige;
-    color: #333;
+    color: #333; */
   }
 
   .top-bar {
