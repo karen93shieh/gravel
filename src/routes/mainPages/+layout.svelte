@@ -176,10 +176,10 @@
                 <User size="18" style="margin-right: 8px;" />
                 My Profile 
             </div>
-            <div class="tab settings" class:active={activeTab === 'settings'} on:click={() => { activeTab = 'settings'; goto('setting'); }}>
+            <!-- <div class="tab settings" class:active={activeTab === 'settings'} on:click={() => { activeTab = 'settings'; goto('setting'); }}>
                 <Settings size="18" style="margin-right: 8px;" />
                 Settings
-            </div>
+            </div> -->
             <div class="logout-btn" on:click={() => goto('/')}>
                 <LogOut size="18" style="margin-right: 8px;" />
                 Logout

@@ -1,23 +1,43 @@
 <script>
-    import { onMount } from 'svelte';
-  
-    function getCurrentTimestamp() {
-      const now = new Date();
-      return now.toLocaleString(undefined, {
-        dateStyle: 'medium',
-        timeStyle: 'short'
-      });
-    }
-  
-    let announcements = [];
-  
-    // Load announcements from localStorage on mount
-    onMount(() => {
-      const saved = localStorage.getItem('announcements');
-      if (saved) {
-        announcements = JSON.parse(saved);
-      } else {
-        announcements = [
+  import { onMount } from 'svelte';
+  import { tripName } from "$lib/stores/Stores.ts";
+
+  function getCurrentTimestamp() {
+    const now = new Date();
+    return now.toLocaleString(undefined, {
+      dateStyle: 'medium',
+      timeStyle: 'short'
+    });
+  }
+
+  let announcements = [];
+  let currentTrip = '';
+  let unsubscribe;
+
+  // Watch for changes in tripName
+  onMount(() => {
+    unsubscribe = tripName.subscribe(name => {
+      currentTrip = name;
+      loadAnnouncements();
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  });
+
+  function getStorageKey() {
+    return `announcements-${currentTrip}`;
+  }
+
+  function loadAnnouncements() {
+    const saved = localStorage.getItem(getStorageKey());
+    if (saved) {
+      announcements = JSON.parse(saved);
+    } else {
+      // Default announcements per trip
+      const defaultAnnouncements = {
+        'Santa Monica': [
           {
             title: "Dinner in 30 minutes",
             details: "Meet at the Hotel la Villa lobby at 8:00 pm.",
@@ -30,50 +50,70 @@
             name: "Chelsea",
             timestamp: getCurrentTimestamp()
           }
-        ];
-        saveAnnouncements();
-      }
-    });
-  
-    function saveAnnouncements() {
-      localStorage.setItem('announcements', JSON.stringify(announcements));
-    }
-  
-    let showForm = false;
-    let titleInput = '';
-    let detailsInput = '';
-  
-    function openForm() {
-      showForm = true;
-    }
-  
-    function closeForm() {
-      showForm = false;
-      titleInput = '';
-      detailsInput = '';
-    }
-  
-    function addAnnouncement() {
-      if (titleInput.trim() && detailsInput.trim()) {
-        announcements = [
-          ...announcements,
+        ],
+        'Vancouver': [
           {
-            title: titleInput,
-            details: detailsInput,
-            name: "Amy",
+            title: "City tour starts at 10 AM",
+            details: "Meet at the front desk for the guided walk.",
+            name: "David",
             timestamp: getCurrentTimestamp()
           }
-        ];
-        saveAnnouncements();
-        closeForm();
-      }
-    }
-  
-    function deleteAnnouncement(index) {
-      announcements = announcements.filter((_, i) => i !== index);
+        ],
+        'Tokyo': [
+          {
+            title: "Sushi night!",
+            details: "We're heading to Tsukiji market at 6:30 PM.",
+            name: "Yuki",
+            timestamp: getCurrentTimestamp()
+          }
+        ]
+      };
+
+      announcements = defaultAnnouncements[currentTrip] || [];
       saveAnnouncements();
     }
-  </script>
+  }
+
+  function saveAnnouncements() {
+    localStorage.setItem(getStorageKey(), JSON.stringify(announcements));
+  }
+
+  let showForm = false;
+  let titleInput = '';
+  let detailsInput = '';
+
+  function openForm() {
+    showForm = true;
+  }
+
+  function closeForm() {
+    showForm = false;
+    titleInput = '';
+    detailsInput = '';
+  }
+
+  function addAnnouncement() {
+    if (titleInput.trim() && detailsInput.trim()) {
+      announcements = [
+        ...announcements,
+        {
+          title: titleInput,
+          details: detailsInput,
+          name: "Amy",
+          timestamp: getCurrentTimestamp()
+        }
+      ];
+      saveAnnouncements();
+      closeForm();
+    }
+  }
+
+  function deleteAnnouncement(index) {
+    announcements = announcements.filter((_, i) => i !== index);
+    saveAnnouncements();
+  }
+</script>
+
   
   <main class="container">
     <div class="announcement-header">

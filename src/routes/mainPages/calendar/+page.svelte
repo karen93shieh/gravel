@@ -1,4 +1,12 @@
 <script>
+
+  import { onMount } from 'svelte';
+  import { tripName } from "$lib/stores/Stores.ts";
+
+  let latestAnnouncement = null;
+  let currentTrip = '';
+
+
   let view = 'week';
   let startDate = new Date();
 
@@ -26,6 +34,22 @@
     }
   ];
 
+  onMount(() => {
+    const unsubscribe = tripName.subscribe(name => {
+      currentTrip = name;
+      const saved = localStorage.getItem(`announcements-${currentTrip}`);
+      if (saved) {
+        const announcements = JSON.parse(saved);
+        if (announcements.length > 0) {
+          latestAnnouncement = announcements[announcements.length - 1];
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  });
+
+
   const getDatesForWeek = (start) => {
     const dates = [];
     const d = new Date(start);
@@ -52,18 +76,6 @@
     startDate = new Date(startDate);
   }
 
-  import { onMount } from 'svelte';
-
-  let latestAnnouncement = null;
-  onMount(() => {
-    const saved = localStorage.getItem('announcements');
-    if (saved) {
-      const announcements = JSON.parse(saved);
-      if (announcements.length > 0) {
-        latestAnnouncement = announcements[announcements.length - 1];
-      }
-    }
-  });
 
   function layoutActivitiesForDate(dateActivities) {
   // Sort by start time
