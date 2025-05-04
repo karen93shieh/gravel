@@ -7,8 +7,15 @@
       title: 'Morning Run',
       date: new Date(),
       startHour: 6,
-      endHour: 7,
+      endHour: 8,
       color: '#8A2BE2',
+    },
+    {
+      title: 'Team Sync',
+      date: new Date(),
+      startHour: 6,
+      endHour: 7,
+      color: '#FF4500',
     },
     {
       title: 'Meeting',
@@ -16,20 +23,6 @@
       startHour: 10,
       endHour: 11,
       color: '#FF00FF',
-    },
-    {
-      title: 'Lunch',
-      date: new Date(),
-      startHour: 12,
-      endHour: 13.5,
-      color: '#00FF00',
-    },
-    {
-      title: 'Team Review',
-      date: new Date(),
-      startHour: 14,
-      endHour: 16,
-      color: '#FF5733',
     }
   ];
 
@@ -50,28 +43,18 @@
     date.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
 
   function goBack() {
-    if (view === 'day') {
-      startDate.setDate(startDate.getDate() - 1);
-    } else if (view === 'week') {
-      startDate.setDate(startDate.getDate() - 7);
-    }
+    startDate.setDate(startDate.getDate() - (view === 'day' ? 1 : 7));
     startDate = new Date(startDate);
   }
 
   function goForward() {
-    if (view === 'day') {
-      startDate.setDate(startDate.getDate() + 1);
-    } else if (view === 'week') {
-      startDate.setDate(startDate.getDate() + 7);
-    }
+    startDate.setDate(startDate.getDate() + (view === 'day' ? 1 : 7));
     startDate = new Date(startDate);
   }
 
-  // Show most recent announcement
-  let latestAnnouncement = null;
-
   import { onMount } from 'svelte';
 
+  let latestAnnouncement = null;
   onMount(() => {
     const saved = localStorage.getItem('announcements');
     if (saved) {
@@ -81,8 +64,51 @@
       }
     }
   });
+
+  function layoutActivitiesForDate(dateActivities) {
+  // Sort by start time
+  dateActivities.sort((a, b) => a.startHour - b.startHour);
+
+  let columns = [];
+
+  for (const activity of dateActivities) {
+    let placed = false;
+
+    for (const column of columns) {
+      if (!column.some(a => isOverlap(a, activity))) {
+        column.push(activity);
+        placed = true;
+        break;
+      }
+    }
+
+    if (!placed) {
+      columns.push([activity]);
+    }
+  }
+
+  // Flatten and assign layout info
+  const positioned = [];
+  columns.forEach((column, colIndex) => {
+    column.forEach(activity => {
+      positioned.push({
+        ...activity,
+        left: `${(colIndex / columns.length) * 100}%`,
+        width: `${100 / columns.length}%`
+      });
+    });
+  });
+
+  return positioned;
+}
+
+function isOverlap(a, b) {
+  return a.startHour < b.endHour && b.startHour < a.endHour;
+}
+
 </script>
 
+<!-- Toolbar and Announcement -->
 <div class="top-bar">
   <div class="view-controls">
     <button class="day-btn" class:selected={view === 'day'} on:click={() => (view = 'day')}>Day</button>
@@ -104,6 +130,7 @@
   </div>
 {/if}
 
+<!-- Week View -->
 {#if view === 'week'}
   <div class="calendar-grid week-view">
     <div class="header-row">
@@ -118,13 +145,12 @@
         <div class="time-cell">{hour}:00</div>
         {#each getDatesForWeek(startDate) as date}
           <div class="calendar-cell">
-            {#each activities.filter(a =>
-              a.date.toDateString() === date.toDateString() &&
-              a.startHour <= hour && a.endHour > hour) as activity}
+            {#each layoutActivitiesForDate(
+              activities.filter(a => a.date.toDateString() === date.toDateString())
+            ).filter(a => a.startHour <= hour && a.endHour > hour) as activity}            
               <div
                 class="activity"
-                style="background-color: {activity.color}; height: {(activity.endHour - activity.startHour) * 100}%; top: {(activity.startHour - hour) * 100}%;"
-              >
+                style="background-color: {activity.color}; top: {(activity.startHour - hour) * 100}%; height: {(activity.endHour - activity.startHour) * 100}%; left: {activity.left}; width: {activity.width};">
                 {activity.title}
               </div>
             {/each}
@@ -133,6 +159,8 @@
       </div>
     {/each}
   </div>
+
+<!-- Day View -->
 {:else if view === 'day'}
   <div class="calendar-grid day-view">
     <div class="header-row">
@@ -144,13 +172,12 @@
       <div class="time-row">
         <div class="time-cell">{hour}:00</div>
         <div class="calendar-cell">
-          {#each activities.filter(a =>
-            a.date.toDateString() === startDate.toDateString() &&
-            a.startHour <= hour && a.endHour > hour) as activity}
+          {#each layoutActivitiesForDate(
+              activities.filter(a => a.date.toDateString() === startDate.toDateString())
+              ).filter(a => a.startHour <= hour && a.endHour > hour) as activity}          
             <div
               class="activity"
-              style="background-color: {activity.color}; height: {(activity.endHour - activity.startHour) * 100}%; top: {(activity.startHour - hour) * 100}%;"
-            >
+              style="background-color: {activity.color}; top: {(activity.startHour - hour) * 100}%; height: {(activity.endHour - activity.startHour) * 100}%; left: {activity.left}; width: {activity.width};">
               {activity.title}
             </div>
           {/each}
@@ -264,16 +291,15 @@
   }
 
   .activity {
-    position: absolute;
-    left: 5px;
-    right: 5px;
-    top: 0;
-    padding: 0.25rem;
-    color: white;
-    font-size: 0.75rem;
-    border-radius: 4px;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-  }
+  position: absolute;
+  padding: 0.25rem;
+  color: white;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
 
   .calendar-grid.day-view .header-row {
     grid-template-columns: 80px 1fr;
@@ -307,5 +333,28 @@
   .announcer {
     font-style: italic;
     color: #555;
+  }
+  .activity {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    padding: 0.25rem;
+    color: white;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+  }
+
+  .calendar-cell {
+    border-left: 1px solid #eee;
+    border-top: 1px solid #eee;
+    position: relative;
+    background-color: white;
+    height: 100px; /* controls vertical spacing of each hour slot */
+  }
+
+  .time-row {
+    min-height: 100px;
   }
 </style>
