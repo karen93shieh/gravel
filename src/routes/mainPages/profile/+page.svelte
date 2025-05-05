@@ -4,17 +4,17 @@
   let editing = false;
   let profile = {
     name: 'Amy',
-    age: '',
-    email: '',
-    dietary: '',
-    parents: '',
-    siblings: '',
-    hotel: '',
-    arrival: '',
-    flight: '',
-    about: '',
-    photo: '' // New field for profile image
-  };
+    age: '32',
+    email: 'amy.traveler@example.com',
+    dietary: 'Vegetarian, No dairy',
+    parents: 'Susan and Robert',
+    siblings: 'Michael, Jessica',
+    hotel: 'Grand Horizon Resort - Room 421',
+    arrival: '2025-05-08',
+    flight: 'Delta DL 247 (JFK → LAX) arriving at 14:30',
+    about: 'Excited for this trip! Love hiking, photography, and trying new foods. Allergic to peanuts.',
+    photo: '' 
+};
 
   onMount(() => {
     const saved = localStorage.getItem('userProfile');
