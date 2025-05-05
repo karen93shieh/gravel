@@ -8,7 +8,10 @@
     let activities = writable([
         { id: 1, title: 'Hiking', description: 'Explore the mountains.', price: '$20', date: '2025-05-09', votes: 0 },
         { id: 2, title: 'Cooking Class', description: 'Learn to cook delicious meals.', price: '$50', date: '2025-05-09', votes: 0 },
-        { id: 3, title: 'Painting Workshop', description: 'Unleash your creativity.', price: '$30', date: '2025-05-10', votes: 0 }
+        { id: 3, title: 'Painting Workshop', description: 'Unleash your creativity.', price: '$30', date: '2025-05-10', votes: 0 },
+        { id: 4, title: 'Beach Yoga', description: 'Morning yoga session by the ocean.', price: '$15', date: '2025-05-10', votes: 0 },
+        { id: 5, title: 'Wine Tasting', description: 'Sample local wines with a sommelier.', price: '$45', date: '2025-05-10', votes: 0 },
+        { id: 6, title: 'City Bike Tour', description: 'Guided cycling tour of downtown.', price: '$25', date: '2025-05-11', votes: 0 }
     ]);
 
     let showCreatePopup = false;
@@ -90,7 +93,7 @@
 <main class="container">
     <div class="activity-header">
         <div></div>
-        <h1 class="title">Activity Voting</h1>
+        <h1 class="title">📊 Activity Voting</h1>
         <button class="new-btn" on:click={() => (showCreatePopup = true)}>
             + Create New Activity
         </button>
@@ -305,6 +308,7 @@
 
     .date-section {
         margin-bottom: 2rem;
+        text-align: left; /* Ensure content is left-aligned */
     }
 
     .date-heading {
@@ -313,9 +317,28 @@
         margin-bottom: 1rem;
         padding-bottom: 0.5rem;
         border-bottom: 2px solid #d8b4fe;
+        text-align: left; /* Left-align the date heading */
     }
 
-    /* Keep all your existing styles */
+    .three-col-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        justify-content: flex-start; /* Changed from 'center' to 'flex-start' */
+    }
+
+    .small-content-box {
+        border: 1px solid #ccc;
+        padding: 1.5rem;
+        width: 280px;
+        border-left: 8px solid #8a2be2;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        text-align: left; /* Ensure content inside boxes is left-aligned */
+    }
+
     .container {
         padding: 2rem;
         max-width: 1000px;

@@ -120,7 +120,7 @@
   <main class="container">
     <div class="announcement-header">
       <div></div>
-      <h1 class="title">Announcements</h1>
+      <h1 class="title">📢 Announcements</h1>
       <button class="new-btn" on:click={openForm}>+ New</button>
     </div>
   
