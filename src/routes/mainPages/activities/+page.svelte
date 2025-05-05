@@ -6,13 +6,13 @@
     import '../../../styles/main.css';
 
     let activities = writable([
-        { id: 1, title: 'Hiking', description: 'Explore the mountains.', price: '$20', votes: 0 },
-        { id: 2, title: 'Cooking Class', description: 'Learn to cook delicious meals.', price: '$50', votes: 0 },
-        { id: 3, title: 'Painting Workshop', description: 'Unleash your creativity.', price: '$30', votes: 0 }
+        { id: 1, title: 'Hiking', description: 'Explore the mountains.', price: '$20', date: '2025-05-09', votes: 0 },
+        { id: 2, title: 'Cooking Class', description: 'Learn to cook delicious meals.', price: '$50', date: '2025-05-09', votes: 0 },
+        { id: 3, title: 'Painting Workshop', description: 'Unleash your creativity.', price: '$30', date: '2025-05-10', votes: 0 }
     ]);
 
     let showCreatePopup = false;
-    let newActivity = { title: '', description: '', price: '' };
+    let newActivity = { title: '', description: '', price: '', date: '' };
 
     const toggleVote = (id) => {
         activities.update((list) =>
@@ -25,15 +25,33 @@
     };
 
     const createActivity = () => {
-        if (newActivity.title && newActivity.description && newActivity.price >= 0) {
+        if (newActivity.title && newActivity.description && newActivity.price >= 0 && newActivity.date) {
             activities.update((list) => [
                 ...list,
                 { id: Date.now(), ...newActivity, votes: 0 }
             ]);
-            newActivity = { title: '', description: '', price: '' };
+            newActivity = { title: '', description: '', price: '', date: '' };
             showCreatePopup = false;
         }
     };
+    
+    // Helper function to group activities by date
+    const groupActivitiesByDate = (activities) => {
+        const grouped = {};
+        activities.forEach(activity => {
+            if (!grouped[activity.date]) {
+                grouped[activity.date] = [];
+            }
+            grouped[activity.date].push(activity);
+        });
+        return grouped;
+    };
+
+    // Helper function to sort dates in ascending order
+    const sortDates = (dates) => {
+        return dates.sort((a, b) => new Date(a) - new Date(b));
+    };
+
 
     const suggestActivity = async () => {
         try {
@@ -61,6 +79,12 @@
             console.error('Error suggesting activity:', error);
         }
     };
+
+    // Helper function to format date for display
+    const formatDate = (dateString) => {
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+    };
 </script>
 
 <main class="container">
@@ -72,24 +96,29 @@
         </button>
     </div>
 
-    <div class="three-col-container">
-        {#each $activities as activity}
-            <div class="small-content-box">
-                <h3>{activity.title}</h3>
-                <p>{activity.description}</p>
-                <p>Price: {activity.price}</p>
-                <div class="vote-section">
-                    <button
-                        class="vote-button {activity.votes > 0 ? 'selected' : ''}"
-                        on:click={() => toggleVote(activity.id)}
-                    >
-                        <CircleArrowUp size="32"/>
-                    </button>
-                    <span class="vote-count">{activity.votes}</span>
-                </div>
+    {#each sortDates(Object.keys(groupActivitiesByDate($activities))) as date}
+        <div class="date-section">
+            <h2 class="date-heading">{formatDate(date)}</h2>
+            <div class="three-col-container">
+                {#each groupActivitiesByDate($activities)[date] as activity}
+                    <div class="small-content-box">
+                        <h3>{activity.title}</h3>
+                        <p>{activity.description}</p>
+                        <p>Price: {activity.price}</p>
+                        <div class="vote-section">
+                            <button
+                                class="vote-button {activity.votes > 0 ? 'selected' : ''}"
+                                on:click={() => toggleVote(activity.id)}
+                            >
+                                <CircleArrowUp size="32"/>
+                            </button>
+                            <span class="vote-count">{activity.votes}</span>
+                        </div>
+                    </div>
+                {/each}
             </div>
-        {/each}
-    </div>
+        </div>
+    {/each}
 
     {#if showCreatePopup}
         <div class="overlay" on:click={() => (showCreatePopup = false)}></div>
@@ -110,18 +139,26 @@
                 placeholder="Price"
                 bind:value={newActivity.price}
             />
-            <button class="button" on:click={createActivity}>
-                Create
-            </button>
-            <button class="button suggest" on:click={suggestActivity}>
-                Suggest Activity
-            </button>
-            <button class="button cancel" on:click={() => (showCreatePopup = false)}>
-                Cancel
-            </button>
+            <input
+                type="date"
+                bind:value={newActivity.date}
+                class="date-input"
+            />
+            <div class="button-group">
+                <button class="button" on:click={createActivity}>
+                    Create
+                </button>
+                <button class="button suggest" on:click={suggestActivity}>
+                    Suggest Activity
+                </button>
+                <button class="button cancel" on:click={() => (showCreatePopup = false)}>
+                    Cancel
+                </button>
+            </div>
         </div>
     {/if}
 </main>
+
 
 <style>
     /* Add these styles to match the announcements page */
@@ -249,4 +286,40 @@
     .popup .button.cancel {
         background-color: red;
     }
+
+    .activity-date {
+        color: #555;
+        font-size: 0.9rem;
+        margin: 0.5rem 0;
+    }
+
+    .date-input {
+        width: 100%;
+        margin-bottom: 1rem;
+        padding: 0.75rem;
+        border: 1px solid #d8b4fe;
+        border-radius: 0.75rem;
+        background-color: #f9f5ff;
+        font-family: inherit;
+    }
+
+    .date-section {
+        margin-bottom: 2rem;
+    }
+
+    .date-heading {
+        font-size: 1.5rem;
+        color: #7e22ce;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #d8b4fe;
+    }
+
+    /* Keep all your existing styles */
+    .container {
+        padding: 2rem;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
 </style>
