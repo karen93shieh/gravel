@@ -165,7 +165,7 @@
 }
 
 .popup .button.suggest {
-    background-color: #1976d2; /* Blue color for the suggest button */
+    background-color: #1976d2 !important; /* Blue color for the suggest button */
     margin-top: 0.5rem;
 }
 

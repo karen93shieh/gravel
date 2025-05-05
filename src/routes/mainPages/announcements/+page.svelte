@@ -31,6 +31,8 @@
   }
 
   function loadAnnouncements() {
+    localStorage.removeItem(getStorageKey());
+
     const saved = localStorage.getItem(getStorageKey());
     if (saved) {
       announcements = JSON.parse(saved);
@@ -39,14 +41,14 @@
       const defaultAnnouncements = {
         'Santa Monica': [
           {
-            title: "Dinner in 30 minutes",
-            details: "Meet at the Hotel la Villa lobby at 8:00 pm.",
+            title: "Breakfast in 30 minutes",
+            details: "Meet at the Hotel la Villa lobby at 8:00 am.",
             name: "Sarah",
             timestamp: getCurrentTimestamp()
           },
           {
-            title: "Beach anyone in 5 minutes?",
-            details: "bring sunscreen pls!",
+            title: "Heading towards the movie!",
+            details: "Please start heading over to the AMC if you want to join us for movie at 11:30!",
             name: "Chelsea",
             timestamp: getCurrentTimestamp()
           }
@@ -270,7 +272,7 @@
     }
   
     #announcementForm .cancel {
-      background-color: #8a2be2;
+      background-color: red;
       margin-left: 0.5rem;
     }
 

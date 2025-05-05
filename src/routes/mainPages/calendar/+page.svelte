@@ -3,6 +3,15 @@
   import { onMount } from 'svelte';
   import { tripName } from "$lib/stores/Stores.ts";
 
+
+  const START_HOUR = 8;
+  const END_HOUR = 22; // 10 PM
+  const tomorrow = new Date(new Date().setDate(new Date().getDate() + 1));
+  const three_days = new Date(new Date().setDate(new Date().getDate() + 2));
+  const four_days = new Date(new Date().setDate(new Date().getDate() + 3));
+  const five_days = new Date(new Date().setDate(new Date().getDate() + 4));
+
+
   let latestAnnouncement = null;
   let currentTrip = '';
 
@@ -12,25 +21,98 @@
 
   let activities = [
     {
-      title: 'Morning Run',
+      title: 'Breakfast',
       date: new Date(),
-      startHour: 6,
-      endHour: 8,
+      startHour: 8.5,
+      endHour: 10,
       color: '#8A2BE2',
     },
     {
-      title: 'Team Sync',
+      title: 'Museum Tour',
       date: new Date(),
-      startHour: 6,
-      endHour: 7,
+      startHour: 10.5,
+      endHour: 14,
       color: '#FF4500',
     },
     {
-      title: 'Meeting',
+      title: 'Movie',
       date: new Date(),
+      startHour: 11.5,
+      endHour: 13.5,
+      color: '#e769c0',
+    },
+    {
+      title: 'Lunch',
+      date: new Date(),
+      startHour: 14,
+      endHour: 15.5,
+      color: '#FF00FF',
+    }, 
+
+
+    // DAY + 1
+    {
+      title: 'Breakfast',
+      date: tomorrow,
       startHour: 10,
       endHour: 11,
+      color: '#8A2BE2',
+    },
+    {
+      title: 'Downtown Walk',
+      date: tomorrow,
+      startHour: 11,
+      endHour: 12.5,
+      color: '#49aaeb',
+    },
+    {
+      title: 'Park Walk',
+      date: tomorrow,
+      startHour: 11,
+      endHour: 12.5,
+      color: '#26c1b2',
+    },
+
+    {
+      title: 'Lunch',
+      date: tomorrow, 
+      startHour: 12.5,
+      endHour: 14,
       color: '#FF00FF',
+    }, 
+
+    // DAY + 2
+    {
+      title: 'Beach',
+      date: three_days, 
+      startHour: 9,
+      endHour: 13,
+      color: '#e7b869',
+    }, 
+    {
+      title: 'Lunch',
+      date: three_days,
+      startHour: 13,
+      endHour: 14.5,
+      color: '#FF00FF',
+    }, 
+
+    // DAY + 3
+
+    {
+      title: 'Brunch',
+      date: four_days,
+      startHour: 11,
+      endHour: 12,
+      color: '#8A2BE2',
+    },
+
+    {
+      title: 'Hiking',
+      date: four_days,
+      startHour: 12.5,
+      endHour: 16,
+      color: '#14c127',
     }
   ];
 
@@ -152,7 +234,7 @@ function isOverlap(a, b) {
       {/each}
     </div>
 
-    {#each Array(24) as _, hour}
+    {#each Array(END_HOUR - START_HOUR).fill(0).map((_, i) => START_HOUR + i) as hour}
       <div class="time-row">
         <div class="time-cell">{hour}:00</div>
         {#each getDatesForWeek(startDate) as date}
@@ -180,7 +262,7 @@ function isOverlap(a, b) {
       <div class="day-header">{formatDate(startDate)}</div>
     </div>
 
-    {#each Array(24) as _, hour}
+    {#each Array(END_HOUR - START_HOUR).fill(0).map((_, i) => START_HOUR + i) as hour}
       <div class="time-row">
         <div class="time-cell">{hour}:00</div>
         <div class="calendar-cell">

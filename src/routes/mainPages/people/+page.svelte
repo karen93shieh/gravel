@@ -186,10 +186,11 @@
     }
 
     .title {
-        font-size: 2rem;
-        font-weight: bold;
-        color: #333;
-        text-align: center;
+      text-align: center;
+      /* color: #6a0dad; */
+      color: black;
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
     }
 
     .create-button {
