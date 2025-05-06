@@ -126,8 +126,17 @@
           latestAnnouncement = announcements[announcements.length - 1];
         }
       }
+      const savedActivities = JSON.parse(localStorage.getItem(`calendarActivities-${currentTrip}`)) || [];
+      activities = [
+            ...activities, 
+            ...savedActivities.map(activity => ({
+                ...activity,
+                date: new Date(activity.date), 
+            })),
+        ];
+      console.log('Activities:', activities);
     });
-
+    
     return () => unsubscribe();
   });
 

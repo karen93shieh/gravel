@@ -154,7 +154,7 @@
         return;
     }
 
-    const calendarActivities = JSON.parse(localStorage.getItem('calendarActivities')) || [];
+    const calendarActivities = JSON.parse(localStorage.getItem(`calendarActivities-${currentTrip}`)) || [];
     const newActivity = {
         title: selectedActivity.title || 'Untitled Activity',
         date: selectedActivity.date || 'No Date', 
@@ -164,8 +164,8 @@
     };
 
     calendarActivities.push(newActivity);
-
-    localStorage.setItem('calendarActivities', JSON.stringify(calendarActivities));
+    
+    localStorage.setItem(`calendarActivities-${currentTrip}`, JSON.stringify(calendarActivities));
 
     alert(`${newActivity.title} has been added to the calendar!`);
     showImportPopup = false; 
