@@ -64,7 +64,7 @@
 
     <label>
       <div class="image-upload">
-        <img src={profile.photo || '/default-profile.jpg'} alt="Profile Picture" class="profile-photo" />
+        <img src={profile.photo || '/picforwebsite.jpg'} alt="Profile Picture" class="profile-photo" />
         {#if editing}
           <!-- Upload Button triggers file input click -->
           <button type="button" on:click={triggerFileInput}>Upload Image</button>
