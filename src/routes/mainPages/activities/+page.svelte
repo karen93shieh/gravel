@@ -28,34 +28,35 @@
             localStorage.setItem(getStorageKey(), JSON.stringify(value));
         });
     }
+
     function loadActivities() {
         const saved = localStorage.getItem(getStorageKey());
         if (saved) {
             activities.set(JSON.parse(saved));
         } else {
             const defaultActivities = {
-            'Santa Monica': [
-                { id: 1, title: 'Hiking', description: 'Explore the mountains.', price: '$20', date: '2025-05-09', votes: 1 },
-                { id: 2, title: 'Cooking Class', description: 'Learn to cook delicious meals.', price: '$50', date: '2025-05-09', votes: 3 },
-                { id: 3, title: 'Beach Volleyball', description: 'Play volleyball on the beach.', price: 'Free', date: '2025-05-10', votes: 0 },
-                { id: 4, title: 'Surfing Lessons', description: 'Learn to surf the waves.', price: '$60', date: '2025-05-11', votes: 5 },
-                { id: 5, title: 'Bike Rentals', description: 'Rent a bike and explore the Santa Monica Pier.', price: '$15', date: '2025-05-12', votes: 2 }
-            ],
-            'Vancouver': [
-                { id: 1, title: 'City Bike Tour', description: 'Guided cycling tour of downtown.', price: '$25', date: '2025-05-11', votes: 3 },
-                { id: 2, title: 'Stanley Park Walk', description: 'Take a scenic walk through Stanley Park.', price: 'Free', date: '2025-05-12', votes: 2 },
-                { id: 3, title: 'Granville Island Market', description: 'Explore the local food and crafts market.', price: 'Free', date: '2025-05-13', votes: 3 },
-                { id: 4, title: 'Kayaking', description: 'Go kayaking in False Creek.', price: '$40', date: '2025-05-14', votes: 0 },
-                { id: 5, title: 'Capilano Suspension Bridge', description: 'Visit the famous suspension bridge.', price: '$55', date: '2025-05-15', votes: 1 }
-            ],
-            'Tokyo': [
-                { id: 1, title: 'Sushi Night', description: 'Enjoy sushi at Tsukiji market.', price: '$45', date: '2025-05-10', votes: 1 },
-                { id: 2, title: 'Cherry Blossom Viewing', description: 'Relax under the cherry blossoms in Ueno Park.', price: 'Free', date: '2025-05-11', votes: 2 },
-                { id: 3, title: 'Akihabara Tour', description: 'Explore the anime and electronics district.', price: '$30', date: '2025-05-12', votes: 0 },
-                { id: 4, title: 'Tea Ceremony', description: 'Experience a traditional Japanese tea ceremony.', price: '$50', date: '2025-05-13', votes: 3 },
-                { id: 5, title: 'Tokyo Tower Visit', description: 'Enjoy the view from Tokyo Tower.', price: '$25', date: '2025-05-14', votes: 4 }
-            ]
-        };
+                'Santa Monica': [
+                    { id: 1, title: 'Hiking', description: 'Explore the mountains.', price: '$20', date: '2025-05-09', votes: 1, selected: false },
+                    { id: 2, title: 'Cooking Class', description: 'Learn to cook delicious meals.', price: '$50', date: '2025-05-09', votes: 3, selected: false },
+                    { id: 3, title: 'Beach Volleyball', description: 'Play volleyball on the beach.', price: 'Free', date: '2025-05-10', votes: 0, selected: false },
+                    { id: 4, title: 'Surfing Lessons', description: 'Learn to surf the waves.', price: '$60', date: '2025-05-11', votes: 5, selected: false },
+                    { id: 5, title: 'Bike Rentals', description: 'Rent a bike and explore the Santa Monica Pier.', price: '$15', date: '2025-05-12', votes: 2, selected: false }
+                ],
+                'Vancouver': [
+                    { id: 1, title: 'City Bike Tour', description: 'Guided cycling tour of downtown.', price: '$25', date: '2025-05-11', votes: 3, selected: false },
+                    { id: 2, title: 'Stanley Park Walk', description: 'Take a scenic walk through Stanley Park.', price: 'Free', date: '2025-05-12', votes: 2, selected: false },
+                    { id: 3, title: 'Granville Island Market', description: 'Explore the local food and crafts market.', price: 'Free', date: '2025-05-13', votes: 3, selected: false },
+                    { id: 4, title: 'Kayaking', description: 'Go kayaking in False Creek.', price: '$40', date: '2025-05-14', votes: 0, selected: false },
+                    { id: 5, title: 'Capilano Suspension Bridge', description: 'Visit the famous suspension bridge.', price: '$55', date: '2025-05-15', votes: 1, selected: false }
+                ],
+                'Tokyo': [
+                    { id: 1, title: 'Sushi Night', description: 'Enjoy sushi at Tsukiji market.', price: '$45', date: '2025-05-10', votes: 1, selected: false },
+                    { id: 2, title: 'Cherry Blossom Viewing', description: 'Relax under the cherry blossoms in Ueno Park.', price: 'Free', date: '2025-05-11', votes: 2, selected: false },
+                    { id: 3, title: 'Akihabara Tour', description: 'Explore the anime and electronics district.', price: '$30', date: '2025-05-12', votes: 0, selected: false },
+                    { id: 4, title: 'Tea Ceremony', description: 'Experience a traditional Japanese tea ceremony.', price: '$50', date: '2025-05-13', votes: 3, selected: false },
+                    { id: 5, title: 'Tokyo Tower Visit', description: 'Enjoy the view from Tokyo Tower.', price: '$25', date: '2025-05-14', votes: 4, selected: false }
+                ]
+            };
 
             activities.set(defaultActivities[currentTrip] || []);
             saveActivities();
@@ -66,14 +67,19 @@
     let newActivity = { title: '', description: '', price: '', date: '' };
 
     const toggleVote = (id) => {
-        activities.update((list) =>
-            list.map((activity) =>
-                activity.id === id
-                    ? { ...activity, votes: activity.votes === 0 ? 1 : 0 }
-                    : activity
-            )
-        );
-    };
+    activities.update((list) =>
+        list.map((activity) =>
+            activity.id === id
+                ? {
+                      ...activity,
+                      votes: activity.selected ? activity.votes - 1 : activity.votes + 1, // Increment or decrement votes
+                      selected: !activity.selected, // Toggle the selected state
+                  }
+                : activity
+        )
+    );
+    saveActivities(); 
+};
 
     const createActivity = () => {
         if (newActivity.title && newActivity.description && newActivity.price >= 0 && newActivity.date) {
@@ -156,10 +162,10 @@
                         <p>Price: {activity.price}</p>
                         <div class="vote-section">
                             <button
-                                class="vote-button {activity.votes > 0 ? 'selected' : ''}"
+                                class="vote-button {activity.selected ? 'selected' : ''}"
                                 on:click={() => toggleVote(activity.id)}
                             >
-                                <CircleArrowUp size="32"/>
+                                <CircleArrowUp size="32" />
                             </button>
                             <span class="vote-count">{activity.votes}</span>
                         </div>
