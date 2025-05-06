@@ -1,7 +1,7 @@
 <script>
     import { onMount } from 'svelte';
     import { writable } from 'svelte/store';
-    import { CircleArrowUp } from 'lucide-svelte';
+    import { CircleArrowUp, CircleCheckBig } from 'lucide-svelte';
     import { tripName } from '$lib/stores/Stores.ts';
     import '../../../styles/main.css';
 
@@ -157,6 +157,9 @@
             <div class="three-col-container">
                 {#each groupActivitiesByDate($activities)[date] as activity}
                     <div class="small-content-box">
+                        <button class="check-button" >
+                            <CircleCheckBig size="24" />
+                        </button>
                         <h3>{activity.title}</h3>
                         <p>{activity.description}</p>
                         <p>Price: {activity.price}</p>
@@ -216,6 +219,29 @@
 
 
 <style>
+    .check-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: #8a2be2;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .check-button:hover {
+        background: #6a1bbd;
+        transform: scale(1.1);
+    }
     .container {
         padding: 2rem;
         max-width: 1000px;

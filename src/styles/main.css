@@ -22,6 +22,7 @@
 }
 
 .small-content-box {
+    position: relative;
     border: 1px solid #ccc;
     padding: 1.5rem;
     width: 280px;
