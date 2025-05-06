@@ -3,8 +3,16 @@
 </script>
 
 <script>
+  import { tripData, tripName } from '$lib/stores/Stores';
+  import { get } from 'svelte/store';
+
   export let data;
-  let { people } = data;
+
+  $: currentTripName = $tripName;
+  $: currentTripPeople = data.allPeople.filter(person => person.trip === currentTripName);
+
+  $: safeTripData = $tripData || {};
+
   let selectedPerson = null;
   let showModal = false;
 
@@ -35,6 +43,7 @@
       }
     }
   }
+
 </script>
 
 <style>
@@ -201,16 +210,28 @@
     <h1 class="title">People on this Trip</h1>
     <button class="invite-button" on:click={sharePage}>Invite Friends</button>
   </div>
+  <div class="trip-buttons">
+    {#each Object.keys(safeTripData) as tripKey}
+    <button
+      class="trip-button {tripKey === $tripName ? 'active' : ''}"
+      on:click={() => tripName.set(tripKey)}
+    >
+        {tripKey}
+      </button>
+    {/each}
+  </div>
 
   <div class="profile-container">
-    {#each people as person}
+  {#if currentTripPeople && currentTripPeople.length > 0}
+    {#each currentTripPeople as person}
       <div class="profile-card" on:click={() => openProfile(person)}>
-        <img src={person.photo} alt={person.name} />
+        <img src={person.photo} alt="{person.name}'s photo"  />
         <h3>{person.name}</h3>
         <button class="view-profile-button">View Profile</button>
       </div>
     {/each}
-  </div>
+  {/if}
+</div>
 
   {#if showModal}
     <div class="overlay" on:click={closeModal} />
