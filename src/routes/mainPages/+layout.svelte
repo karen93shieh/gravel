@@ -1,9 +1,26 @@
 <script>
     import { goto } from "$app/navigation";
-    import { tripName } from "$lib/stores/Stores.ts";
+    import { tripName, onPage } from "$lib/stores/Stores.ts"; // Import onPage
     import { Calendar, Megaphone, Activity, Users, User, Settings, LogOut, Plane, Home } from 'lucide-svelte';
+    import { onMount } from 'svelte';
 
-    let activeTab = "main";
+    let activeTab = $onPage;
+    
+    console.log($tripName);
+
+    // Update onPage when the activeTab changes
+    $: {
+        if (activeTab) {
+            $onPage = activeTab;
+        }
+    }
+    onMount(() => {
+        const path = window.location.pathname.split('/').pop() || 'main';
+        if (path !== activeTab) {
+            activeTab = path;
+        }
+    });
+
 </script>
 
 <style>
@@ -147,32 +164,32 @@
         </div>
 
         <!-- Main tab -->
-        <div class="tab main" class:active={activeTab === 'main'} on:click={() => { activeTab = 'main'; goto('main'); }}>
+        <div class="tab main" class:active={activeTab == 'main'} on:click={() => { activeTab = 'main'; goto('main'); }}>
             <Home size="18" style="margin-right: 8px;" />
             Main
         </div>
 
         <!-- Navigation tabs -->
-        <div class="tab calendar" class:active={activeTab === 'calendar'} on:click={() => { activeTab = 'calendar'; goto('calendar'); }}>
+        <div class="tab calendar" class:active={activeTab == 'calendar'} on:click={() => { activeTab = 'calendar'; goto('calendar'); }}>
             <Calendar size="18" style="margin-right: 8px;" />
             Calendar
         </div>
-        <div class="tab announcements" class:active={activeTab === 'announcements'} on:click={() => { activeTab = 'announcements'; goto('announcements'); }}>
+        <div class="tab announcements" class:active={activeTab == 'announcements'} on:click={() => { activeTab = 'announcements'; goto('announcements'); }}>
             <Megaphone size="18" style="margin-right: 8px;" />
             Announcements
         </div>
-        <div class="tab activities" class:active={activeTab === 'activities'} on:click={() => { activeTab = 'activities'; goto('activities'); }}>
+        <div class="tab activities" class:active={activeTab == 'activities'} on:click={() => { activeTab = 'activities'; goto('activities'); }}>
             <Activity size="18" style="margin-right: 8px;" />
             Activities
         </div>
-        <div class="tab people" class:active={activeTab === 'people'} on:click={() => { activeTab = 'people'; goto('people'); }}>
+        <div class="tab people" class:active={activeTab == 'people'} on:click={() => { activeTab = 'people'; goto('people'); }}>
             <Users size="18" style="margin-right: 8px;" />
             People
         </div>
 
         <!-- Bottom navigation tabs -->
         <div class="bottom-tabs">
-            <div class="tab profile" class:active={activeTab === 'profile'} on:click={() => { activeTab = 'profile'; goto('profile'); }}>
+            <div class="tab profile" class:active={activeTab == 'profile'} on:click={() => { activeTab = 'profile'; goto('profile'); }}>
                 <User size="18" style="margin-right: 8px;" />
                 My Profile 
             </div>

@@ -1,7 +1,28 @@
 import { writable, derived } from 'svelte/store';
 
+// Helper function for localStorage persistence
+const persistStore = (key: string, initialValue: string) => {
+  // Get stored value or fall back to initialValue
+  const storedValue = typeof window !== 'undefined' ? localStorage.getItem(key) : null;
+  const initial = storedValue ? storedValue : initialValue;
 
-export const tripName = writable('Santa Monica'); // selected trip
+  // Create the writable store
+  const store = writable(initial);
+
+  // Subscribe to store changes and persist to localStorage
+  if (typeof window !== 'undefined') {
+    store.subscribe(value => {
+      localStorage.setItem(key, value);
+    });
+  }
+
+  return store;
+};
+
+
+// Create persisted stores
+export const onPage = persistStore('onPage', 'main');
+export const tripName = persistStore('tripName', 'Santa Monica');
 
 // Trip data for all trips
 const allTripData = {
