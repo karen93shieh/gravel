@@ -2,17 +2,65 @@
     import { onMount } from 'svelte';
     import { writable } from 'svelte/store';
     import { CircleArrowUp } from 'lucide-svelte';
-
+    import { tripName } from '$lib/stores/Stores.ts';
     import '../../../styles/main.css';
 
-    let activities = writable([
-        { id: 1, title: 'Hiking', description: 'Explore the mountains.', price: '$20', date: '2025-05-09', votes: 0 },
-        { id: 2, title: 'Cooking Class', description: 'Learn to cook delicious meals.', price: '$50', date: '2025-05-09', votes: 0 },
-        { id: 3, title: 'Painting Workshop', description: 'Unleash your creativity.', price: '$30', date: '2025-05-10', votes: 0 },
-        { id: 4, title: 'Beach Yoga', description: 'Morning yoga session by the ocean.', price: '$15', date: '2025-05-10', votes: 0 },
-        { id: 5, title: 'Wine Tasting', description: 'Sample local wines with a sommelier.', price: '$45', date: '2025-05-10', votes: 0 },
-        { id: 6, title: 'City Bike Tour', description: 'Guided cycling tour of downtown.', price: '$25', date: '2025-05-11', votes: 0 }
-    ]);
+    let activities = writable([]);
+    let currentTrip = '';
+    let unsubscribe;
+
+    onMount(() => {
+        unsubscribe = tripName.subscribe(name => {
+            currentTrip = name;
+            loadActivities();
+        });
+
+        return () => {
+            if (unsubscribe) unsubscribe();
+        };
+    });
+
+    function getStorageKey() {
+        return `activities-${currentTrip}`;
+    }
+    function saveActivities() {
+        activities.subscribe(value => {
+            localStorage.setItem(getStorageKey(), JSON.stringify(value));
+        });
+    }
+    function loadActivities() {
+        const saved = localStorage.getItem(getStorageKey());
+        if (saved) {
+            activities.set(JSON.parse(saved));
+        } else {
+            const defaultActivities = {
+            'Santa Monica': [
+                { id: 1, title: 'Hiking', description: 'Explore the mountains.', price: '$20', date: '2025-05-09', votes: 0 },
+                { id: 2, title: 'Cooking Class', description: 'Learn to cook delicious meals.', price: '$50', date: '2025-05-09', votes: 0 },
+                { id: 3, title: 'Beach Volleyball', description: 'Play volleyball on the beach.', price: 'Free', date: '2025-05-10', votes: 0 },
+                { id: 4, title: 'Surfing Lessons', description: 'Learn to surf the waves.', price: '$60', date: '2025-05-11', votes: 0 },
+                { id: 5, title: 'Bike Rentals', description: 'Rent a bike and explore the Santa Monica Pier.', price: '$15', date: '2025-05-12', votes: 0 }
+            ],
+            'Vancouver': [
+                { id: 1, title: 'City Bike Tour', description: 'Guided cycling tour of downtown.', price: '$25', date: '2025-05-11', votes: 0 },
+                { id: 2, title: 'Stanley Park Walk', description: 'Take a scenic walk through Stanley Park.', price: 'Free', date: '2025-05-12', votes: 0 },
+                { id: 3, title: 'Granville Island Market', description: 'Explore the local food and crafts market.', price: 'Free', date: '2025-05-13', votes: 0 },
+                { id: 4, title: 'Kayaking', description: 'Go kayaking in False Creek.', price: '$40', date: '2025-05-14', votes: 0 },
+                { id: 5, title: 'Capilano Suspension Bridge', description: 'Visit the famous suspension bridge.', price: '$55', date: '2025-05-15', votes: 0 }
+            ],
+            'Tokyo': [
+                { id: 1, title: 'Sushi Night', description: 'Enjoy sushi at Tsukiji market.', price: '$45', date: '2025-05-10', votes: 0 },
+                { id: 2, title: 'Cherry Blossom Viewing', description: 'Relax under the cherry blossoms in Ueno Park.', price: 'Free', date: '2025-05-11', votes: 0 },
+                { id: 3, title: 'Akihabara Tour', description: 'Explore the anime and electronics district.', price: '$30', date: '2025-05-12', votes: 0 },
+                { id: 4, title: 'Tea Ceremony', description: 'Experience a traditional Japanese tea ceremony.', price: '$50', date: '2025-05-13', votes: 0 },
+                { id: 5, title: 'Tokyo Tower Visit', description: 'Enjoy the view from Tokyo Tower.', price: '$25', date: '2025-05-14', votes: 0 }
+            ]
+        };
+
+            activities.set(defaultActivities[currentTrip] || []);
+            saveActivities();
+        }
+    }
 
     let showCreatePopup = false;
     let newActivity = { title: '', description: '', price: '', date: '' };
@@ -34,11 +82,11 @@
                 { id: Date.now(), ...newActivity, votes: 0 }
             ]);
             newActivity = { title: '', description: '', price: '', date: '' };
+            saveActivities();
             showCreatePopup = false;
         }
     };
     
-    // Helper function to group activities by date
     const groupActivitiesByDate = (activities) => {
         const grouped = {};
         activities.forEach(activity => {
@@ -50,7 +98,6 @@
         return grouped;
     };
 
-    // Helper function to sort dates in ascending order
     const sortDates = (dates) => {
         return dates.sort((a, b) => new Date(a) - new Date(b));
     };
@@ -67,7 +114,7 @@
                         Authorization: 'Bearer rg_v1_v8x4v0intklea8f9tnhwq3r0rd0lvglgcd3t_ngk',
                     },
                     body: JSON.stringify({
-                        location: "Santa Monica",
+                        location: currentTrip,
                         activities: $activities.map((activity) => activity.title).join(', '),
                     }),
                 }
@@ -83,7 +130,6 @@
         }
     };
 
-    // Helper function to format date for display
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'short', day: 'numeric' };
         return new Date(dateString).toLocaleDateString(undefined, options);
@@ -164,7 +210,6 @@
 
 
 <style>
-    /* Add these styles to match the announcements page */
     .container {
         padding: 2rem;
         max-width: 1000px;
@@ -336,7 +381,7 @@
         border-radius: 12px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
-        text-align: left; /* Ensure content inside boxes is left-aligned */
+        text-align: left;
     }
 
     .container {
