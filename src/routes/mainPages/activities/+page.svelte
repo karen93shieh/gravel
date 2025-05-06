@@ -8,6 +8,14 @@
     let activities = writable([]);
     let currentTrip = '';
     let unsubscribe;
+    let showImportPopup = false; 
+    let selectedActivity = null; 
+    let startHour;
+    let endHour;
+    let color;
+    const colors = ['#8A2BE2', '#FF4500', '#14c127', '#FF00FF', '#49aaeb']; 
+
+    
 
     onMount(() => {
         unsubscribe = tripName.subscribe(name => {
@@ -140,6 +148,33 @@
         const options = { year: 'numeric', month: 'short', day: 'numeric' };
         return new Date(dateString).toLocaleDateString(undefined, options);
     };
+    const importToCalendar = () => {
+    if (!selectedActivity) {
+        alert('No activity selected!');
+        return;
+    }
+
+    const calendarActivities = JSON.parse(localStorage.getItem('calendarActivities')) || [];
+    const newActivity = {
+        title: selectedActivity.title || 'Untitled Activity',
+        date: selectedActivity.date || 'No Date', 
+        startHour: startHour || '09:00',
+        endHour: endHour || '10:00', 
+        color: color || '#8A2BE2', 
+    };
+
+    calendarActivities.push(newActivity);
+
+    localStorage.setItem('calendarActivities', JSON.stringify(calendarActivities));
+
+    alert(`${newActivity.title} has been added to the calendar!`);
+    showImportPopup = false; 
+};
+
+    const openImportPopup = (activity) => {
+        selectedActivity = activity; 
+        showImportPopup = true; 
+    };
 </script>
 
 <main class="container">
@@ -157,7 +192,7 @@
             <div class="three-col-container">
                 {#each groupActivitiesByDate($activities)[date] as activity}
                     <div class="small-content-box">
-                        <button class="check-button" >
+                        <button class="check-button" on:click={() => openImportPopup(activity)}>
                             <CircleCheckBig size="24" />
                         </button>
                         <h3>{activity.title}</h3>
@@ -177,6 +212,34 @@
             </div>
         </div>
     {/each}
+    {#if showImportPopup}
+        <div class="overlay" on:click={() => (showImportPopup = false)}></div>
+        <div class="popup">
+            <h2>Import Activity to Calendar</h2>
+            <p><strong>{selectedActivity.title}</strong></p>
+            <label for="start-time">Start Time:</label>
+            <input id="start-time" type="time" bind:value={startHour} />
+
+            <label for="end-time">End Time:</label>
+            <input id="end-time" type="time" bind:value={endHour} />
+
+            <label for="color">Color:</label>
+            <div id="color" class="color-options">
+                {#each colors as c}
+                    <div
+                        class="color-circle {color === c ? 'selected' : ''}"
+                        style="background-color: {c}"
+                        on:click={() => (color = c)}
+                    ></div>
+                {/each}
+            </div>
+
+            <div class="button-group">
+                <button class="button" on:click={importToCalendar}>Import</button>
+                <button class="button cancel" on:click={() => (showImportPopup = false)}>Cancel</button>
+            </div>
+        </div>
+    {/if}
 
     {#if showCreatePopup}
         <div class="overlay" on:click={() => (showCreatePopup = false)}></div>
@@ -219,6 +282,45 @@
 
 
 <style>
+
+    .popup label {
+        display: block;
+        margin-bottom: 1rem;
+        font-weight: bold;
+    }
+
+    .popup input[type="time"] {
+        width: 100%;
+        margin-top: 0.5rem;
+        padding: 0.75rem;
+        border: 1px solid #d8b4fe;
+        border-radius: 0.75rem;
+        background-color: #f9f5ff;
+    }
+    .color-options {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+        margin-bottom: 1.5rem;
+        justify-content: center; 
+    }
+
+    .color-circle {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .color-circle:hover {
+        transform: scale(1.1);
+    }
+
+    .color-circle.selected {
+        border-color: black; /* Highlight the selected color */
+    }
     .check-button {
         position: absolute;
         top: 10px;
