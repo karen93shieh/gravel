@@ -35,25 +35,25 @@
         } else {
             const defaultActivities = {
             'Santa Monica': [
-                { id: 1, title: 'Hiking', description: 'Explore the mountains.', price: '$20', date: '2025-05-09', votes: 0 },
-                { id: 2, title: 'Cooking Class', description: 'Learn to cook delicious meals.', price: '$50', date: '2025-05-09', votes: 0 },
+                { id: 1, title: 'Hiking', description: 'Explore the mountains.', price: '$20', date: '2025-05-09', votes: 1 },
+                { id: 2, title: 'Cooking Class', description: 'Learn to cook delicious meals.', price: '$50', date: '2025-05-09', votes: 3 },
                 { id: 3, title: 'Beach Volleyball', description: 'Play volleyball on the beach.', price: 'Free', date: '2025-05-10', votes: 0 },
-                { id: 4, title: 'Surfing Lessons', description: 'Learn to surf the waves.', price: '$60', date: '2025-05-11', votes: 0 },
-                { id: 5, title: 'Bike Rentals', description: 'Rent a bike and explore the Santa Monica Pier.', price: '$15', date: '2025-05-12', votes: 0 }
+                { id: 4, title: 'Surfing Lessons', description: 'Learn to surf the waves.', price: '$60', date: '2025-05-11', votes: 5 },
+                { id: 5, title: 'Bike Rentals', description: 'Rent a bike and explore the Santa Monica Pier.', price: '$15', date: '2025-05-12', votes: 2 }
             ],
             'Vancouver': [
-                { id: 1, title: 'City Bike Tour', description: 'Guided cycling tour of downtown.', price: '$25', date: '2025-05-11', votes: 0 },
-                { id: 2, title: 'Stanley Park Walk', description: 'Take a scenic walk through Stanley Park.', price: 'Free', date: '2025-05-12', votes: 0 },
-                { id: 3, title: 'Granville Island Market', description: 'Explore the local food and crafts market.', price: 'Free', date: '2025-05-13', votes: 0 },
+                { id: 1, title: 'City Bike Tour', description: 'Guided cycling tour of downtown.', price: '$25', date: '2025-05-11', votes: 3 },
+                { id: 2, title: 'Stanley Park Walk', description: 'Take a scenic walk through Stanley Park.', price: 'Free', date: '2025-05-12', votes: 2 },
+                { id: 3, title: 'Granville Island Market', description: 'Explore the local food and crafts market.', price: 'Free', date: '2025-05-13', votes: 3 },
                 { id: 4, title: 'Kayaking', description: 'Go kayaking in False Creek.', price: '$40', date: '2025-05-14', votes: 0 },
-                { id: 5, title: 'Capilano Suspension Bridge', description: 'Visit the famous suspension bridge.', price: '$55', date: '2025-05-15', votes: 0 }
+                { id: 5, title: 'Capilano Suspension Bridge', description: 'Visit the famous suspension bridge.', price: '$55', date: '2025-05-15', votes: 1 }
             ],
             'Tokyo': [
-                { id: 1, title: 'Sushi Night', description: 'Enjoy sushi at Tsukiji market.', price: '$45', date: '2025-05-10', votes: 0 },
-                { id: 2, title: 'Cherry Blossom Viewing', description: 'Relax under the cherry blossoms in Ueno Park.', price: 'Free', date: '2025-05-11', votes: 0 },
+                { id: 1, title: 'Sushi Night', description: 'Enjoy sushi at Tsukiji market.', price: '$45', date: '2025-05-10', votes: 1 },
+                { id: 2, title: 'Cherry Blossom Viewing', description: 'Relax under the cherry blossoms in Ueno Park.', price: 'Free', date: '2025-05-11', votes: 2 },
                 { id: 3, title: 'Akihabara Tour', description: 'Explore the anime and electronics district.', price: '$30', date: '2025-05-12', votes: 0 },
-                { id: 4, title: 'Tea Ceremony', description: 'Experience a traditional Japanese tea ceremony.', price: '$50', date: '2025-05-13', votes: 0 },
-                { id: 5, title: 'Tokyo Tower Visit', description: 'Enjoy the view from Tokyo Tower.', price: '$25', date: '2025-05-14', votes: 0 }
+                { id: 4, title: 'Tea Ceremony', description: 'Experience a traditional Japanese tea ceremony.', price: '$50', date: '2025-05-13', votes: 3 },
+                { id: 5, title: 'Tokyo Tower Visit', description: 'Enjoy the view from Tokyo Tower.', price: '$25', date: '2025-05-14', votes: 4 }
             ]
         };
 
