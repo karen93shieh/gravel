@@ -8,9 +8,9 @@
   });
 
   onDestroy(unsubscribe);
-
+  
   /* UNCOMMENT THIS PART IF NEED TO CLEAR LOCAL STORAGE*/
-    // Get all keys from localStorage
+  //   // Get all keys from localStorage
   // const keys = Object.keys(localStorage);
 
   // // Filter keys that contain "Tokyo"

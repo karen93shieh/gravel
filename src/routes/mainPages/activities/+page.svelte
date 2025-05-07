@@ -110,16 +110,35 @@
     };
 
     const toggleCheck = (id) => {
-        activities.update((list) =>
-            list.map((activity) =>
-                activity.id === id
-                    ? {
-                        ...activity,
-                        checked: !activity.checked
+        activities.update((list) => {
+            // Find the activity being toggled
+            const updatedList = list.map((activity) => {
+                if (activity.id === id) {
+                    const newCheckedState = !activity.checked;
+                    
+                    // Remove from calendarActivities if being unchecked
+                    if (!newCheckedState) {
+                        const calendarActivities = JSON.parse(localStorage.getItem(`calendarActivities-${currentTrip}`)) || [];
+                        const updatedCalendarActivities = calendarActivities.filter(
+                            calActivity => !(
+                                calActivity.title === activity.title && 
+                                calActivity.date === activity.date
+                            )
+                        );
+                        localStorage.setItem(`calendarActivities-${currentTrip}`, JSON.stringify(updatedCalendarActivities));
                     }
-                    : activity
-            )
-        );
+                    
+                    return {
+                        ...activity,
+                        checked: newCheckedState
+                    };
+                }
+                return activity;
+            });
+            
+            return updatedList;
+        });
+        
         saveActivities();
     };
 
@@ -253,35 +272,37 @@
 
 
     const openImportPopup = (activity) => {
-        selectedActivity = activity;
-        // Set default time values
-        startHour = '09:00';
-        endHour = '10:00';
-        color = colors[0];
-        showImportPopup = true;
-        
-        // Immediately store with default values
-        const calendarActivities = JSON.parse(localStorage.getItem(`calendarActivities-${currentTrip}`)) || [];
-        const newCalendarActivity = {
-            title: activity.title || 'Untitled Activity',
-            date: activity.date || new Date().toISOString().split('T')[0],
-            startHour: 9.0,
-            endHour: 10.0,
-            color: colors[0]
-        };
-        
-        // Check if this activity already exists in calendar
-        const exists = calendarActivities.some(calActivity => 
-            calActivity.title === newCalendarActivity.title && 
-            calActivity.date === newCalendarActivity.date
-        );
-        
-        if (!exists) {
-            calendarActivities.push(newCalendarActivity);
-            localStorage.setItem(`calendarActivities-${currentTrip}`, JSON.stringify(calendarActivities));
+        if (!activity.checked) {
+            selectedActivity = activity;
+            // Set default time values
+            startHour = '09:00';
+            endHour = '10:00';
+            color = colors[0];
+            showImportPopup = true;
+            
+            // Immediately store with default values
+            const calendarActivities = JSON.parse(localStorage.getItem(`calendarActivities-${currentTrip}`)) || [];
+            const newCalendarActivity = {
+                title: activity.title || 'Untitled Activity',
+                date: activity.date || new Date().toISOString().split('T')[0],
+                startHour: 9.0,
+                endHour: 10.0,
+                color: colors[0]
+            };
+            
+            // Check if this activity already exists in calendar
+            const exists = calendarActivities.some(calActivity => 
+                calActivity.title === newCalendarActivity.title && 
+                calActivity.date === newCalendarActivity.date
+            );
+            
+            if (!exists) {
+                calendarActivities.push(newCalendarActivity);
+                localStorage.setItem(`calendarActivities-${currentTrip}`, JSON.stringify(calendarActivities));
+            }
         }
         
-        // Toggle the checked state
+        // Always toggle the checked state
         toggleCheck(activity.id);
     };
 </script>
