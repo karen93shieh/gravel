@@ -38,7 +38,7 @@
     }
 
     function loadActivities() {
-        localStorage.removeItem(getStorageKey());
+        // localStorage.removeItem(getStorageKey());
 
         const saved = localStorage.getItem(getStorageKey());
         if (saved) {
