@@ -95,6 +95,7 @@
                 ...list,
                 { id: Date.now(), ...newActivity, votes: 0 }
             ]);
+            console.log('New activity created:', newActivity);
             newActivity = { title: '', description: '', price: '', date: '' };
             saveActivities();
             showCreatePopup = false;
@@ -158,10 +159,12 @@
     const newActivity = {
         title: selectedActivity.title || 'Untitled Activity',
         date: selectedActivity.date || 'No Date', 
-        startHour: startHour || '09:00',
-        endHour: endHour || '10:00', 
+        startHour: parseFloat(startHour) || 9.0,
+        endHour: parseFloat(endHour) || 10.0,
         color: color || '#8A2BE2', 
     };
+    console.log(newActivity);
+
 
     calendarActivities.push(newActivity);
     
