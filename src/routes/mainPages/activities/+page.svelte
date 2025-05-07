@@ -2,7 +2,7 @@
     import { onMount } from 'svelte';
     import { writable } from 'svelte/store';
     import { CircleArrowUp, CircleCheckBig } from 'lucide-svelte';
-    import { tripName } from '$lib/stores/Stores.ts';
+    import { tripName, tripData } from '$lib/stores/Stores.ts';
     import '../../../styles/main.css';
 
     let activities = writable([]);
@@ -38,31 +38,51 @@
     }
 
     function loadActivities() {
+        localStorage.removeItem(getStorageKey());
+
         const saved = localStorage.getItem(getStorageKey());
         if (saved) {
             activities.set(JSON.parse(saved));
         } else {
+            // Get the trip data
+            let trip;
+            const unsubscribeTripData = tripData.subscribe(value => {
+                trip = value;
+            });
+            unsubscribeTripData();
+            
+            // Generate dates between start and end date
+            const dates = [];
+            if (trip && trip.dates) {
+                const startDate = new Date(trip.dates.startDate);
+                const endDate = new Date(trip.dates.endDate);
+                
+                for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                    dates.push(new Date(d).toISOString().split('T')[0]);
+                }
+            }
+
             const defaultActivities = {
                 'Santa Monica': [
-                    { id: 1, title: 'Hiking', description: 'Explore the mountains.', price: '$20', date: '2025-05-09', votes: 1, selected: false },
-                    { id: 2, title: 'Cooking Class', description: 'Learn to cook delicious meals.', price: '$50', date: '2025-05-09', votes: 3, selected: false },
-                    { id: 3, title: 'Beach Volleyball', description: 'Play volleyball on the beach.', price: 'Free', date: '2025-05-10', votes: 0, selected: false },
-                    { id: 4, title: 'Surfing Lessons', description: 'Learn to surf the waves.', price: '$60', date: '2025-05-11', votes: 5, selected: false },
-                    { id: 5, title: 'Bike Rentals', description: 'Rent a bike and explore the Santa Monica Pier.', price: '$15', date: '2025-05-12', votes: 2, selected: false }
+                    { id: 1, title: 'Hiking', description: 'Explore the mountains.', price: '$20', date: dates[0] || '2025-05-15', votes: 1, selected: false },
+                    { id: 2, title: 'Cooking Class', description: 'Learn to cook delicious meals.', price: '$50', date: dates[0] || '2025-05-15', votes: 3, selected: false },
+                    { id: 3, title: 'Beach Volleyball', description: 'Play volleyball on the beach.', price: 'Free', date: dates[1] || '2025-05-16', votes: 0, selected: false },
+                    { id: 4, title: 'Surfing Lessons', description: 'Learn to surf the waves.', price: '$60', date: dates[2] || '2025-05-17', votes: 5, selected: false },
+                    { id: 5, title: 'Bike Rentals', description: 'Rent a bike and explore the Santa Monica Pier.', price: '$15', date: dates[3] || '2025-05-18', votes: 2, selected: false }
                 ],
                 'Vancouver': [
-                    { id: 1, title: 'City Bike Tour', description: 'Guided cycling tour of downtown.', price: '$25', date: '2025-05-11', votes: 3, selected: false },
-                    { id: 2, title: 'Stanley Park Walk', description: 'Take a scenic walk through Stanley Park.', price: 'Free', date: '2025-05-12', votes: 2, selected: false },
-                    { id: 3, title: 'Granville Island Market', description: 'Explore the local food and crafts market.', price: 'Free', date: '2025-05-13', votes: 3, selected: false },
-                    { id: 4, title: 'Kayaking', description: 'Go kayaking in False Creek.', price: '$40', date: '2025-05-14', votes: 0, selected: false },
-                    { id: 5, title: 'Capilano Suspension Bridge', description: 'Visit the famous suspension bridge.', price: '$55', date: '2025-05-15', votes: 1, selected: false }
+                    { id: 1, title: 'City Bike Tour', description: 'Guided cycling tour of downtown.', price: '$25', date: dates[0] || '2025-06-01', votes: 3, selected: false },
+                    { id: 2, title: 'Stanley Park Walk', description: 'Take a scenic walk through Stanley Park.', price: 'Free', date: dates[1] || '2025-06-02', votes: 2, selected: false },
+                    { id: 3, title: 'Granville Island Market', description: 'Explore the local food and crafts market.', price: 'Free', date: dates[2] || '2025-06-03', votes: 3, selected: false },
+                    { id: 4, title: 'Kayaking', description: 'Go kayaking in False Creek.', price: '$40', date: dates[3] || '2025-06-04', votes: 0, selected: false },
+                    { id: 5, title: 'Capilano Suspension Bridge', description: 'Visit the famous suspension bridge.', price: '$55', date: dates[4] || '2025-06-05', votes: 1, selected: false }
                 ],
                 'Tokyo': [
-                    { id: 1, title: 'Sushi Night', description: 'Enjoy sushi at Tsukiji market.', price: '$45', date: '2025-05-10', votes: 1, selected: false },
-                    { id: 2, title: 'Cherry Blossom Viewing', description: 'Relax under the cherry blossoms in Ueno Park.', price: 'Free', date: '2025-05-11', votes: 2, selected: false },
-                    { id: 3, title: 'Akihabara Tour', description: 'Explore the anime and electronics district.', price: '$30', date: '2025-05-12', votes: 0, selected: false },
-                    { id: 4, title: 'Tea Ceremony', description: 'Experience a traditional Japanese tea ceremony.', price: '$50', date: '2025-05-13', votes: 3, selected: false },
-                    { id: 5, title: 'Tokyo Tower Visit', description: 'Enjoy the view from Tokyo Tower.', price: '$25', date: '2025-05-14', votes: 4, selected: false }
+                    { id: 1, title: 'Sushi Night', description: 'Enjoy sushi at Tsukiji market.', price: '$45', date: dates[0] || '2025-07-10', votes: 1, selected: false },
+                    { id: 2, title: 'Cherry Blossom Viewing', description: 'Relax under the cherry blossoms in Ueno Park.', price: 'Free', date: dates[1] || '2025-07-11', votes: 2, selected: false },
+                    { id: 3, title: 'Akihabara Tour', description: 'Explore the anime and electronics district.', price: '$30', date: dates[2] || '2025-07-12', votes: 0, selected: false },
+                    { id: 4, title: 'Tea Ceremony', description: 'Experience a traditional Japanese tea ceremony.', price: '$50', date: dates[3] || '2025-07-13', votes: 3, selected: false },
+                    { id: 5, title: 'Tokyo Tower Visit', description: 'Enjoy the view from Tokyo Tower.', price: '$25', date: dates[4] || '2025-07-14', votes: 4, selected: false }
                 ]
             };
 
@@ -75,22 +95,41 @@
     let newActivity = { title: '', description: '', price: '', date: '' };
 
     const toggleVote = (id) => {
-    activities.update((list) =>
-        list.map((activity) =>
-            activity.id === id
-                ? {
-                      ...activity,
-                      votes: activity.selected ? activity.votes - 1 : activity.votes + 1, // Increment or decrement votes
-                      selected: !activity.selected, // Toggle the selected state
-                  }
-                : activity
-        )
-    );
-    saveActivities(); 
-};
+        activities.update((list) =>
+            list.map((activity) =>
+                activity.id === id
+                    ? {
+                        ...activity,
+                        votes: activity.selected ? activity.votes - 1 : activity.votes + 1, // Increment or decrement votes
+                        selected: !activity.selected, // Toggle the selected state
+                    }
+                    : activity
+            )
+        );
+        saveActivities(); 
+    };
 
     const createActivity = () => {
         if (newActivity.title && newActivity.description && newActivity.price >= 0 && newActivity.date) {
+            // Get trip data to validate date
+            let trip;
+            const unsubscribeTripData = tripData.subscribe(value => {
+                trip = value;
+            });
+            unsubscribeTripData();
+            
+            // Validate date is within trip range
+            if (trip && trip.dates) {
+                const activityDate = new Date(newActivity.date);
+                const startDate = new Date(trip.dates.startDate);
+                const endDate = new Date(trip.dates.endDate);
+                
+                if (activityDate < startDate || activityDate > endDate) {
+                    alert('Activity date must be within the trip dates!');
+                    return;
+                }
+            }
+            
             activities.update((list) => [
                 ...list,
                 { id: Date.now(), ...newActivity, votes: 0 }
@@ -120,6 +159,13 @@
 
     const suggestActivity = async () => {
         try {
+            // Get trip data for the dates
+            let trip;
+            const unsubscribeTripData = tripData.subscribe(value => {
+                trip = value;
+            });
+            unsubscribeTripData();
+            
             const response = await fetch(
                 'https://noggin.rea.gent/fierce-cheetah-8297',
                 {
@@ -131,6 +177,8 @@
                     body: JSON.stringify({
                         location: currentTrip,
                         activities: $activities.map((activity) => activity.title).join(', '),
+                        startDate: trip?.dates?.startDate,
+                        endDate: trip?.dates?.endDate
                     }),
                 }
             );
@@ -140,6 +188,7 @@
             newActivity.title = suggestedActivity.name || '';
             newActivity.description = suggestedActivity.description || '';
             newActivity.price = suggestedActivity.price || 0;
+            newActivity.date = suggestedActivity.date || trip?.dates?.startDate || '';
         } catch (error) {
             console.error('Error suggesting activity:', error);
         }
@@ -149,34 +198,73 @@
         const options = { year: 'numeric', month: 'short', day: 'numeric' };
         return new Date(dateString + 'T00:00:00').toLocaleDateString(undefined, options);
     };
-    const importToCalendar = () => {
-    if (!selectedActivity) {
-        alert('No activity selected!');
-        return;
-    }
 
-    const calendarActivities = JSON.parse(localStorage.getItem(`calendarActivities-${currentTrip}`)) || [];
-    const newActivity = {
-        title: selectedActivity.title || 'Untitled Activity',
-        date: selectedActivity.date || 'No Date', 
-        startHour: parseFloat(startHour) || 9.0,
-        endHour: parseFloat(endHour) || 10.0,
-        color: color || '#8A2BE2', 
-    };
-    console.log(newActivity);
-
-
-    calendarActivities.push(newActivity);
     
-    localStorage.setItem(`calendarActivities-${currentTrip}`, JSON.stringify(calendarActivities));
+    const importToCalendar = () => {
+        if (!selectedActivity) {
+            alert('No activity selected!');
+            return;
+        }
 
-    alert(`${newActivity.title} has been added to the calendar!`);
-    showImportPopup = false; 
-};
+        const calendarActivities = JSON.parse(localStorage.getItem(`calendarActivities-${currentTrip}`)) || [];
+        
+        // Find and update the existing activity
+        const activityIndex = calendarActivities.findIndex(calActivity => 
+            calActivity.title === selectedActivity.title && 
+            calActivity.date === selectedActivity.date
+        );
+        
+        if (activityIndex !== -1) {
+            // Convert time strings to numbers (e.g., "09:30" → 9.5)
+            const startHourValue = startHour ? parseFloat(startHour.split(':')[0]) + (parseFloat(startHour.split(':')[1])/60) : 9.0;
+            const endHourValue = endHour ? parseFloat(endHour.split(':')[0]) + (parseFloat(endHour.split(':')[1])/60) : 10.0;
+            
+            calendarActivities[activityIndex] = {
+                title: selectedActivity.title || 'Untitled Activity',
+                date: selectedActivity.date || new Date().toISOString().split('T')[0],
+                startHour: startHourValue,
+                endHour: endHourValue,
+                color: color || colors[0]
+            };
+            
+            localStorage.setItem(`calendarActivities-${currentTrip}`, JSON.stringify(calendarActivities));
+            alert(`${selectedActivity.title} has been updated in the calendar!`);
+        } else {
+            alert('Activity not found in calendar!');
+        }
+        
+        showImportPopup = false;
+    };
+
 
     const openImportPopup = (activity) => {
-        selectedActivity = activity; 
-        showImportPopup = true; 
+        selectedActivity = activity;
+        // Set default time values
+        startHour = '09:00';
+        endHour = '10:00';
+        color = colors[0];
+        showImportPopup = true;
+        
+        // Immediately store with default values
+        const calendarActivities = JSON.parse(localStorage.getItem(`calendarActivities-${currentTrip}`)) || [];
+        const newCalendarActivity = {
+            title: activity.title || 'Untitled Activity',
+            date: activity.date || new Date().toISOString().split('T')[0],
+            startHour: 9.0, // Default start time
+            endHour: 10.0,  // Default end time
+            color: colors[0] // Default color
+        };
+        
+        // Check if this activity already exists in calendar
+        const exists = calendarActivities.some(calActivity => 
+            calActivity.title === newCalendarActivity.title && 
+            calActivity.date === newCalendarActivity.date
+        );
+        
+        if (!exists) {
+            calendarActivities.push(newCalendarActivity);
+            localStorage.setItem(`calendarActivities-${currentTrip}`, JSON.stringify(calendarActivities));
+        }
     };
 </script>
 
@@ -221,10 +309,20 @@
             <h2>Import Activity to Calendar</h2>
             <p><strong>{selectedActivity.title}</strong></p>
             <label for="start-time">Start Time:</label>
-            <input id="start-time" type="time" bind:value={startHour} />
+            <input 
+                id="start-time" 
+                type="time" 
+                bind:value={startHour}
+                step="900" 
+            />
 
             <label for="end-time">End Time:</label>
-            <input id="end-time" type="time" bind:value={endHour} />
+            <input 
+                id="end-time" 
+                type="time" 
+                bind:value={endHour}
+                step="900" 
+            />
 
             <label for="color">Color:</label>
             <div id="color" class="color-options">

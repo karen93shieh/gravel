@@ -1,123 +1,71 @@
 <script>
-
   import { onMount } from 'svelte';
-  import { tripName } from "$lib/stores/Stores.ts";
-
+  import { tripName, tripData } from "$lib/stores/Stores.ts";
 
   const START_HOUR = 8;
   const END_HOUR = 22; // 10 PM
-  const tomorrow = new Date(new Date().setDate(new Date().getDate() + 1));
-  const three_days = new Date(new Date().setDate(new Date().getDate() + 2));
-  const four_days = new Date(new Date().setDate(new Date().getDate() + 3));
-  const five_days = new Date(new Date().setDate(new Date().getDate() + 4));
-
-
   let latestAnnouncement = null;
   let currentTrip = '';
-
-
   let view = 'week';
   let startDate = new Date();
+  let activities = [];
+  let tripDates = { startDate: new Date(), endDate: new Date() };
 
-  let activities = [
-    {
-      title: 'Breakfast',
-      date: new Date(),
-      startHour: 8.5,
-      endHour: 10,
-      color: '#8A2BE2',
-    },
-    {
-      title: 'Museum Tour',
-      date: new Date(),
-      startHour: 10.5,
-      endHour: 14,
-      color: '#FF4500',
-    },
-    {
-      title: 'Movie',
-      date: new Date(),
-      startHour: 11.5,
-      endHour: 13.5,
-      color: '#e769c0',
-    },
-    {
-      title: 'Lunch',
-      date: new Date(),
-      startHour: 14,
-      endHour: 15.5,
-      color: '#FF00FF',
-    }, 
+  // Default activities for each trip
+  const tripDefaultActivities = {
+    'Santa Monica': [
+      { title: 'Beach Day', startHour: 9, endHour: 13, color: '#e7b869' },
+      { title: 'Pier Walk', startHour: 14, endHour: 16, color: '#49aaeb' },
+      { title: 'Movie', startHour: 15, endHour: 17, color: '#49aaeb' },
+      { title: 'Sunset Dinner', startHour: 18, endHour: 20, color: '#FF4500' },
+      { title: 'Surf Lesson', startHour: 9, endHour: 11, color: '#26c1b2', dateOffset: 1 },
+      { title: 'Shopping', startHour: 12, endHour: 15, color: '#FF00FF', dateOffset: 1 }
+    ],
+    'Vancouver': [
+      { title: 'Stanley Park', startHour: 9, endHour: 12, color: '#14c127' },
+      { title: 'Granville Island', startHour: 13, endHour: 16, color: '#49aaeb' },
+      { title: 'Seafood Dinner', startHour: 18, endHour: 20, color: '#FF4500' },
+      { title: 'Grouse Mountain', startHour: 10, endHour: 15, color: '#8A2BE2', dateOffset: 1 },
+      { title: 'Capilano Bridge', startHour: 16, endHour: 18, color: '#e769c0', dateOffset: 1 }
+    ],
+    'Tokyo': [
+      { title: 'Tsukiji Market', startHour: 8, endHour: 10, color: '#FF4500' },
+      { title: 'Shibuya Crossing', startHour: 11, endHour: 13, color: '#8A2BE2' },
+      { title: 'Sushi Dinner', startHour: 18, endHour: 20, color: '#14c127' },
+      { title: 'Akihabara Tour', startHour: 10, endHour: 14, color: '#e769c0', dateOffset: 1 },
+      { title: 'Tokyo Tower', startHour: 15, endHour: 17, color: '#49aaeb', dateOffset: 1 }
+    ]
+  };
 
+  function generateDefaultActivities() {
+    if (!currentTrip || !tripDates.startDate) return [];
+    
+    const defaults = tripDefaultActivities[currentTrip] || [];
+    const day2 = new Date(tripDates.startDate);
+    day2.setDate(day2.getDate() + 1);
+    
+    return defaults.map(activity => {
+      const activityDate = activity.dateOffset === 1 ? 
+        new Date(day2) : 
+        new Date(tripDates.startDate);
+        
+      return {
+        title: activity.title,
+        date: activityDate,
+        startHour: activity.startHour,
+        endHour: activity.endHour,
+        color: activity.color
+      };
+    });
+  }
 
-    // DAY + 1
-    {
-      title: 'Breakfast',
-      date: tomorrow,
-      startHour: 10,
-      endHour: 11,
-      color: '#8A2BE2',
-    },
-    {
-      title: 'Downtown Walk',
-      date: tomorrow,
-      startHour: 11,
-      endHour: 12.5,
-      color: '#49aaeb',
-    },
-    {
-      title: 'Park Walk',
-      date: tomorrow,
-      startHour: 11,
-      endHour: 12.5,
-      color: '#26c1b2',
-    },
-
-    {
-      title: 'Lunch',
-      date: tomorrow, 
-      startHour: 12.5,
-      endHour: 14,
-      color: '#FF00FF',
-    }, 
-
-    // DAY + 2
-    {
-      title: 'Beach',
-      date: three_days, 
-      startHour: 9,
-      endHour: 13,
-      color: '#e7b869',
-    }, 
-    {
-      title: 'Lunch',
-      date: three_days,
-      startHour: 13,
-      endHour: 14.5,
-      color: '#FF00FF',
-    }, 
-
-    // DAY + 3
-
-    {
-      title: 'Brunch',
-      date: four_days,
-      startHour: 11,
-      endHour: 12,
-      color: '#8A2BE2',
-    },
-
-    {
-      title: 'Hiking',
-      date: four_days,
-      startHour: 12.5,
-      endHour: 16,
-      color: '#14c127',
-    }
-  ];
+  function shouldShowDefaults() {
+    const savedActivities = JSON.parse(localStorage.getItem(`calendarActivities-${currentTrip}`)) || [];
+    return savedActivities.length === 0;
+  }
 
   onMount(() => {
-    const unsubscribe = tripName.subscribe(name => {
+    const unsubscribeTripName = tripName.subscribe(name => {
       currentTrip = name;
       const saved = localStorage.getItem(`announcements-${currentTrip}`);
       if (saved) {
@@ -126,20 +74,35 @@
           latestAnnouncement = announcements[announcements.length - 1];
         }
       }
-      const savedActivities = JSON.parse(localStorage.getItem(`calendarActivities-${currentTrip}`)) || [];
-      activities = [
-            ...activities, 
-            ...savedActivities.map(activity => ({
-                ...activity,
-                date: new Date(activity.date), 
-            })),
-        ];
-      console.log('Activities:', activities);
+
+      // Get trip dates
+      const unsubscribeTripData = tripData.subscribe(data => {
+        if (data?.dates) {
+          tripDates.startDate = new Date(data.dates.startDate);
+          tripDates.endDate = new Date(data.dates.endDate);
+          startDate = new Date(tripDates.startDate);
+          
+          const savedActivities = JSON.parse(localStorage.getItem(`calendarActivities-${currentTrip}`)) || [];
+          activities = savedActivities.map(activity => ({
+            ...activity,
+            date: new Date(activity.date), 
+          }));
+
+          // Only add defaults if no saved activities exist
+          // if (shouldShowDefaults()) {
+            activities = [
+              ...generateDefaultActivities(),
+              ...activities
+            ];
+          // }
+        }
+      });
+      
+      return () => unsubscribeTripData();
     });
     
-    return () => unsubscribe();
+    return () => unsubscribeTripName();
   });
-
 
   const getDatesForWeek = (start) => {
     const dates = [];
@@ -167,48 +130,46 @@
     startDate = new Date(startDate);
   }
 
-
   function layoutActivitiesForDate(dateActivities) {
-  // Sort by start time
-  dateActivities.sort((a, b) => a.startHour - b.startHour);
+    // Sort by start time
+    dateActivities.sort((a, b) => a.startHour - b.startHour);
 
-  let columns = [];
+    let columns = [];
 
-  for (const activity of dateActivities) {
-    let placed = false;
+    for (const activity of dateActivities) {
+      let placed = false;
 
-    for (const column of columns) {
-      if (!column.some(a => isOverlap(a, activity))) {
-        column.push(activity);
-        placed = true;
-        break;
+      for (const column of columns) {
+        if (!column.some(a => isOverlap(a, activity))) {
+          column.push(activity);
+          placed = true;
+          break;
+        }
+      }
+
+      if (!placed) {
+        columns.push([activity]);
       }
     }
 
-    if (!placed) {
-      columns.push([activity]);
-    }
-  }
-
-  // Flatten and assign layout info
-  const positioned = [];
-  columns.forEach((column, colIndex) => {
-    column.forEach(activity => {
-      positioned.push({
-        ...activity,
-        left: `${(colIndex / columns.length) * 100}%`,
-        width: `${100 / columns.length}%`
+    // Flatten and assign layout info
+    const positioned = [];
+    columns.forEach((column, colIndex) => {
+      column.forEach(activity => {
+        positioned.push({
+          ...activity,
+          left: `${(colIndex / columns.length) * 100}%`,
+          width: `${100 / columns.length}%`
+        });
       });
     });
-  });
 
-  return positioned;
-}
+    return positioned;
+  }
 
-function isOverlap(a, b) {
-  return a.startHour < b.endHour && b.startHour < a.endHour;
-}
-
+  function isOverlap(a, b) {
+    return a.startHour < b.endHour && b.startHour < a.endHour;
+  }
 </script>
 
 <!-- Toolbar and Announcement -->
