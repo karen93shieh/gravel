@@ -164,6 +164,7 @@
                 }
             }
             
+            
             activities.update((list) => [
                 ...list,
                 { id: Date.now(), ...newActivity, votes: 0 }
@@ -172,6 +173,14 @@
             newActivity = { title: '', description: '', price: '', date: '' };
             saveActivities();
             showCreatePopup = false;
+        }
+        if (newActivity.price < 0 || isNaN(newActivity.price)) {
+            alert('Price is not valid!');
+            return;   
+        }
+        if(newActivity.title == '' || newActivity.description == '' || newActivity.price == '' || newActivity.date == '') {
+            alert('Please fill in all fields!');
+            return;
         }
     };
     
