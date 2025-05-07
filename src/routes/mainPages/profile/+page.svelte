@@ -14,7 +14,10 @@
     flight: 'Delta DL 247 (JFK → LAX) arriving at 14:30',
     about: 'Excited for this trip! Love hiking, photography, and trying new foods. Allergic to peanuts.',
     photo: '' 
-};
+  };
+
+  let originalProfile = {};
+
 
   onMount(() => {
     const saved = localStorage.getItem('userProfile');
@@ -29,7 +32,13 @@
   }
 
   function enableEditing() {
+    originalProfile = { ...profile }; // shallow copy of original
     editing = true;
+  }
+
+  function cancelEditing() {
+    profile = { ...originalProfile }; // revert to original
+    editing = false;
   }
 
   // Handle the profile picture upload
@@ -57,6 +66,7 @@
     <div class="form-controls">
       {#if editing}
         <button on:click={saveProfile}>Save</button>
+        <button on:click={cancelEditing} class="cancel">Cancel</button>
       {:else}
         <button on:click={enableEditing}>Edit</button>
       {/if}
@@ -211,5 +221,14 @@
 
   .image-upload button:hover {
     background-color: #45a049;
+  }
+
+  button.cancel {
+    background-color: red;
+    margin-left: 0.5rem;
+  }
+
+  button.cancel:hover {
+    background-color: rgb(213, 0, 0);
   }
 </style>
