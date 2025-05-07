@@ -41,14 +41,28 @@
     if (!currentTrip || !tripDates.startDate) return [];
     
     const defaults = tripDefaultActivities[currentTrip] || [];
-    const day2 = new Date(tripDates.startDate);
+    // const day2 = new Date(tripDates.startDate);
+    // day2.setDate(day2.getDate() + 1);
+    const day1 = new Date(tripDates.startDate);
+    day1.setDate(day1.getDate() + 1);
+    const day2 = new Date(day1);
     day2.setDate(day2.getDate() + 1);
     
-    return defaults.map(activity => {
-      const activityDate = activity.dateOffset === 1 ? 
-        new Date(day2) : 
-        new Date(tripDates.startDate);
+    // return defaults.map(activity => {
+    //   const activityDate = activity.dateOffset === 1 ? 
+    //     new Date(day2) : 
+    //     new Date(tripDates.startDate);
         
+    //   return {
+    //     title: activity.title,
+    //     date: activityDate,
+    //     startHour: activity.startHour,
+    //     endHour: activity.endHour,
+    //     color: activity.color
+    //   };
+    // });
+    return defaults.map(activity => {
+      const activityDate = activity.dateOffset === 1 ? new Date(day2) : new Date(day1);
       return {
         title: activity.title,
         date: activityDate,
@@ -81,11 +95,13 @@
           tripDates.startDate = new Date(data.dates.startDate);
           tripDates.endDate = new Date(data.dates.endDate);
           startDate = new Date(tripDates.startDate);
+          startDate.setDate(startDate.getDate() + 1); // Fix off-by-one display
           
           const savedActivities = JSON.parse(localStorage.getItem(`calendarActivities-${currentTrip}`)) || [];
           activities = savedActivities.map(activity => ({
             ...activity,
-            date: new Date(activity.date), 
+            // date: new Date(activity.date), 
+            date: new Date(new Date(activity.date).setDate(new Date(activity.date).getDate() + 1)), // Adjust date to next day
           }));
 
           // Only add defaults if no saved activities exist

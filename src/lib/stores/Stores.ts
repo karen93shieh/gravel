@@ -33,8 +33,8 @@ const allTripData = {
       country: "USA"
     },
     dates: {
-      startDate: "2025-05-15",
-      endDate: "2025-05-20"
+      startDate: "2025-05-17",
+      endDate: "2025-05-22"
     },
     weather: {
       forecast: {
