@@ -1,6 +1,8 @@
 <script>
   import { onMount } from 'svelte';
   import { tripName, tripData } from "$lib/stores/Stores.ts";
+  import Modal from '$lib/CalendarModal.svelte';
+
 
   const START_HOUR = 8;
   const END_HOUR = 22; // 10 PM
@@ -36,6 +38,16 @@
       { title: 'Tokyo Tower', startHour: 15, endHour: 17, color: '#49aaeb', dateOffset: 1 }
     ]
   };
+
+  let selectedActivity = null;
+
+  function openActivityModal(activity) {
+    selectedActivity = activity;
+  }
+
+  function closeModal() {
+    selectedActivity = null;
+  }
 
   function generateDefaultActivities() {
     if (!currentTrip || !tripDates.startDate) return [];
@@ -98,18 +110,21 @@
           startDate.setDate(startDate.getDate() + 1); // Fix off-by-one display
           
           const savedActivities = JSON.parse(localStorage.getItem(`calendarActivities-${currentTrip}`)) || [];
+          console.log("Saved activities from localStorage:", savedActivities);
           activities = savedActivities.map(activity => ({
             ...activity,
             // date: new Date(activity.date), 
             date: new Date(new Date(activity.date).setDate(new Date(activity.date).getDate() + 1)), // Adjust date to next day
           }));
 
+          console.log("Activities from localStorage:", activities);
           // Only add defaults if no saved activities exist
           // if (shouldShowDefaults()) {
             activities = [
               ...generateDefaultActivities(),
               ...activities
             ];
+            
           // }
         }
       });
@@ -230,6 +245,7 @@
             ).filter(a => a.startHour <= hour && a.endHour > hour) as activity}            
               <div
                 class="activity"
+                on:click={() => openActivityModal(activity)}
                 style="background-color: {activity.color}; top: {(activity.startHour - hour) * 100}%; height: {(activity.endHour - activity.startHour) * 100}%; left: {activity.left}; width: {activity.width};">
                 {activity.title}
               </div>
@@ -265,6 +281,10 @@
       </div>
     {/each}
   </div>
+{/if}
+
+{#if selectedActivity}
+  <Modal activity={selectedActivity} onClose={closeModal} />
 {/if}
 
 <style>

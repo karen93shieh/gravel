@@ -258,7 +258,9 @@
                 date: selectedActivity.date || new Date().toISOString().split('T')[0],
                 startHour: startHourValue,
                 endHour: endHourValue,
-                color: color || colors[0]
+                color: color || colors[0],
+                description: selectedActivity.description || 'No description available',
+                price: selectedActivity.price || 'Free'
             };
             
             localStorage.setItem(`calendarActivities-${currentTrip}`, JSON.stringify(calendarActivities));
@@ -287,7 +289,9 @@
                 date: activity.date || new Date().toISOString().split('T')[0],
                 startHour: 9.0,
                 endHour: 10.0,
-                color: colors[0]
+                color: colors[0],
+                description: activity.description || 'No description available',
+                price: activity.price || 'Free'
             };
             
             // Check if this activity already exists in calendar
@@ -299,6 +303,8 @@
             if (!exists) {
                 calendarActivities.push(newCalendarActivity);
                 localStorage.setItem(`calendarActivities-${currentTrip}`, JSON.stringify(calendarActivities));
+                console.log('Activity added to calendar:', newCalendarActivity);
+                console.log('All calendar activities:', calendarActivities);
             }
         }
         

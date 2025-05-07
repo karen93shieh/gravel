@@ -8,45 +8,44 @@
   });
 
   onDestroy(unsubscribe);
-  
-  /* UNCOMMENT THIS PART IF NEED TO CLEAR LOCAL STORAGE*/
-  //   // Get all keys from localStorage
-  // const keys = Object.keys(localStorage);
+/* UNCOMMENT THIS PART IF NEED TO CLEAR LOCAL STORAGE */
+//   // Get all keys from localStorage
+// const keys = Object.keys(localStorage);
 
-  // // Filter keys that contain "Tokyo"
-  // const tokyoKeys = keys.filter(key => key.includes("Tokyo"));
+// // Filter keys that contain "Tokyo"
+// const tokyoKeys = keys.filter(key => key.includes("Tokyo"));
 
-  // // Remove each matching item
-  // tokyoKeys.forEach(key => {
-  //     localStorage.removeItem(key);
-  //     console.log(`Removed: ${key}`);
-  // });
+// // Remove each matching item
+// tokyoKeys.forEach(key => {
+//     localStorage.removeItem(key);
+//     console.log(`Removed: ${key}`);
+// });
 
-  // console.log(`Cleared ${tokyoKeys.length} items containing "Tokyo"`);
-
-
-  // // Filter keys that contain "Tokyo"
-  // const smKeys = keys.filter(key => key.includes("Santa Monica"));
-
-  // // Remove each matching item
-  // smKeys.forEach(key => {
-  //     localStorage.removeItem(key);
-  //     console.log(`Removed: ${key}`);
-  // });
-
-  // console.log(`Cleared ${smKeys.length} items containing "Santa Monica"`);
+// console.log(`Cleared ${tokyoKeys.length} items containing "Tokyo"`);
 
 
-  // // Filter keys that contain "Tokyo"
-  // const vKeys = keys.filter(key => key.includes("Vancouver"));
+// // Filter keys that contain "Tokyo"
+// const smKeys = keys.filter(key => key.includes("Santa Monica"));
 
-  // // Remove each matching item
-  // vKeys.forEach(key => {
-  //     localStorage.removeItem(key);
-  //     console.log(`Removed: ${key}`);
-  // });
+// // Remove each matching item
+// smKeys.forEach(key => {
+//     localStorage.removeItem(key);
+//     console.log(`Removed: ${key}`);
+// });
 
-  // console.log(`Cleared ${tokyoKeys.length} items containing "Vancouver"`);
+// console.log(`Cleared ${smKeys.length} items containing "Santa Monica"`);
+
+
+// // Filter keys that contain "Tokyo"
+// const vKeys = keys.filter(key => key.includes("Vancouver"));
+
+// // Remove each matching item
+// vKeys.forEach(key => {
+//     localStorage.removeItem(key);
+//     console.log(`Removed: ${key}`);
+// });
+
+// console.log(`Cleared ${tokyoKeys.length} items containing "Vancouver"`);
 
   // destructure the data
   $: location = data?.location;

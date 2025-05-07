@@ -207,7 +207,7 @@
 <main class="container">
   <div class="activity-header">
     <div></div>
-    <h1 class="title">People on this Trip</h1>
+    <h1 class="title">👨‍👩‍👧‍👦 People on this Trip</h1>
     <button class="invite-button" on:click={sharePage}>Invite Friends</button>
   </div>
 
