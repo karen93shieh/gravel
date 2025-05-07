@@ -210,16 +210,6 @@
     <h1 class="title">People on this Trip</h1>
     <button class="invite-button" on:click={sharePage}>Invite Friends</button>
   </div>
-  <div class="trip-buttons">
-    {#each Object.keys(safeTripData) as tripKey}
-    <button
-      class="trip-button {tripKey === $tripName ? 'active' : ''}"
-      on:click={() => tripName.set(tripKey)}
-    >
-        {tripKey}
-      </button>
-    {/each}
-  </div>
 
   <div class="profile-container">
   {#if currentTripPeople && currentTripPeople.length > 0}
