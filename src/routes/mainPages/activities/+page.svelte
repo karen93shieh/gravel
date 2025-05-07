@@ -64,25 +64,25 @@
 
             const defaultActivities = {
                 'Santa Monica': [
-                    { id: 1, title: 'Hiking', description: 'Explore the mountains.', price: '$20', date: dates[0] || '2025-05-15', votes: 1, selected: false },
-                    { id: 2, title: 'Cooking Class', description: 'Learn to cook delicious meals.', price: '$50', date: dates[0] || '2025-05-15', votes: 3, selected: false },
-                    { id: 3, title: 'Beach Volleyball', description: 'Play volleyball on the beach.', price: 'Free', date: dates[1] || '2025-05-16', votes: 0, selected: false },
-                    { id: 4, title: 'Surfing Lessons', description: 'Learn to surf the waves.', price: '$60', date: dates[2] || '2025-05-17', votes: 5, selected: false },
-                    { id: 5, title: 'Bike Rentals', description: 'Rent a bike and explore the Santa Monica Pier.', price: '$15', date: dates[3] || '2025-05-18', votes: 2, selected: false }
+                    { id: 1, title: 'Hiking', description: 'Explore the mountains.', price: '$20', date: dates[0] || '2025-05-15', votes: 1, selected: false, checked: false },
+                    { id: 2, title: 'Cooking Class', description: 'Learn to cook delicious meals.', price: '$50', date: dates[0] || '2025-05-15', votes: 3, selected: false, checked: false },
+                    { id: 3, title: 'Beach Volleyball', description: 'Play volleyball on the beach.', price: 'Free', date: dates[1] || '2025-05-16', votes: 0, selected: false, checked: false },
+                    { id: 4, title: 'Surfing Lessons', description: 'Learn to surf the waves.', price: '$60', date: dates[2] || '2025-05-17', votes: 5, selected: false, checked: false },
+                    { id: 5, title: 'Bike Rentals', description: 'Rent a bike and explore the Santa Monica Pier.', price: '$15', date: dates[3] || '2025-05-18', votes: 2, selected: false, checked: false }
                 ],
                 'Vancouver': [
-                    { id: 1, title: 'City Bike Tour', description: 'Guided cycling tour of downtown.', price: '$25', date: dates[0] || '2025-06-01', votes: 3, selected: false },
-                    { id: 2, title: 'Stanley Park Walk', description: 'Take a scenic walk through Stanley Park.', price: 'Free', date: dates[1] || '2025-06-02', votes: 2, selected: false },
-                    { id: 3, title: 'Granville Island Market', description: 'Explore the local food and crafts market.', price: 'Free', date: dates[2] || '2025-06-03', votes: 3, selected: false },
-                    { id: 4, title: 'Kayaking', description: 'Go kayaking in False Creek.', price: '$40', date: dates[3] || '2025-06-04', votes: 0, selected: false },
-                    { id: 5, title: 'Capilano Suspension Bridge', description: 'Visit the famous suspension bridge.', price: '$55', date: dates[4] || '2025-06-05', votes: 1, selected: false }
+                    { id: 1, title: 'City Bike Tour', description: 'Guided cycling tour of downtown.', price: '$25', date: dates[0] || '2025-06-01', votes: 3, selected: false, checked: false },
+                    { id: 2, title: 'Stanley Park Walk', description: 'Take a scenic walk through Stanley Park.', price: 'Free', date: dates[1] || '2025-06-02', votes: 2, selected: false, checked: false },
+                    { id: 3, title: 'Granville Island Market', description: 'Explore the local food and crafts market.', price: 'Free', date: dates[2] || '2025-06-03', votes: 3, selected: false, checked: false },
+                    { id: 4, title: 'Kayaking', description: 'Go kayaking in False Creek.', price: '$40', date: dates[3] || '2025-06-04', votes: 0, selected: false, checked: false },
+                    { id: 5, title: 'Capilano Suspension Bridge', description: 'Visit the famous suspension bridge.', price: '$55', date: dates[4] || '2025-06-05', votes: 1, selected: false, checked: false }
                 ],
                 'Tokyo': [
-                    { id: 1, title: 'Sushi Night', description: 'Enjoy sushi at Tsukiji market.', price: '$45', date: dates[0] || '2025-07-10', votes: 1, selected: false },
-                    { id: 2, title: 'Cherry Blossom Viewing', description: 'Relax under the cherry blossoms in Ueno Park.', price: 'Free', date: dates[1] || '2025-07-11', votes: 2, selected: false },
-                    { id: 3, title: 'Akihabara Tour', description: 'Explore the anime and electronics district.', price: '$30', date: dates[2] || '2025-07-12', votes: 0, selected: false },
-                    { id: 4, title: 'Tea Ceremony', description: 'Experience a traditional Japanese tea ceremony.', price: '$50', date: dates[3] || '2025-07-13', votes: 3, selected: false },
-                    { id: 5, title: 'Tokyo Tower Visit', description: 'Enjoy the view from Tokyo Tower.', price: '$25', date: dates[4] || '2025-07-14', votes: 4, selected: false }
+                    { id: 1, title: 'Sushi Night', description: 'Enjoy sushi at Tsukiji market.', price: '$45', date: dates[0] || '2025-07-10', votes: 1, selected: false, checked: false },
+                    { id: 2, title: 'Cherry Blossom Viewing', description: 'Relax under the cherry blossoms in Ueno Park.', price: 'Free', date: dates[1] || '2025-07-11', votes: 2, selected: false, checked: false },
+                    { id: 3, title: 'Akihabara Tour', description: 'Explore the anime and electronics district.', price: '$30', date: dates[2] || '2025-07-12', votes: 0, selected: false, checked: false },
+                    { id: 4, title: 'Tea Ceremony', description: 'Experience a traditional Japanese tea ceremony.', price: '$50', date: dates[3] || '2025-07-13', votes: 3, selected: false, checked: false },
+                    { id: 5, title: 'Tokyo Tower Visit', description: 'Enjoy the view from Tokyo Tower.', price: '$25', date: dates[4] || '2025-07-14', votes: 4, selected: false, checked: false }
                 ]
             };
 
@@ -108,6 +108,21 @@
         );
         saveActivities(); 
     };
+
+    const toggleCheck = (id) => {
+        activities.update((list) =>
+            list.map((activity) =>
+                activity.id === id
+                    ? {
+                        ...activity,
+                        checked: !activity.checked
+                    }
+                    : activity
+            )
+        );
+        saveActivities();
+    };
+
 
     const createActivity = () => {
         if (newActivity.title && newActivity.description && newActivity.price >= 0 && newActivity.date) {
@@ -250,9 +265,9 @@
         const newCalendarActivity = {
             title: activity.title || 'Untitled Activity',
             date: activity.date || new Date().toISOString().split('T')[0],
-            startHour: 9.0, // Default start time
-            endHour: 10.0,  // Default end time
-            color: colors[0] // Default color
+            startHour: 9.0,
+            endHour: 10.0,
+            color: colors[0]
         };
         
         // Check if this activity already exists in calendar
@@ -265,6 +280,9 @@
             calendarActivities.push(newCalendarActivity);
             localStorage.setItem(`calendarActivities-${currentTrip}`, JSON.stringify(calendarActivities));
         }
+        
+        // Toggle the checked state
+        toggleCheck(activity.id);
     };
 </script>
 
@@ -283,7 +301,10 @@
             <div class="three-col-container">
                 {#each groupActivitiesByDate($activities)[date] as activity}
                     <div class="small-content-box">
-                        <button class="check-button" on:click={() => openImportPopup(activity)}>
+                        <button 
+                            class="check-button {activity.checked ? 'checked' : ''}" 
+                            on:click={() => openImportPopup(activity)}
+                        >
                             <CircleCheckBig size="24" />
                         </button>
                         <h3>{activity.title}</h3>
@@ -422,6 +443,7 @@
     .color-circle.selected {
         border-color: black; /* Highlight the selected color */
     }
+    
     .check-button {
         position: absolute;
         top: 10px;
@@ -441,10 +463,15 @@
         transition: background-color 0.3s ease, transform 0.2s ease;
     }
 
+    .check-button.checked {
+        background: #FFD700; /* Gold color */
+    }
+
     .check-button:hover {
-        background: #6a1bbd;
         transform: scale(1.1);
     }
+
+
     .container {
         padding: 2rem;
         max-width: 1000px;
