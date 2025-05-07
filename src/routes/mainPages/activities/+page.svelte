@@ -146,7 +146,7 @@
 
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'short', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString(undefined, options);
+        return new Date(dateString + 'T00:00:00').toLocaleDateString(undefined, options);
     };
     const importToCalendar = () => {
     if (!selectedActivity) {
@@ -329,8 +329,8 @@
         color: white;
         border: none;
         border-radius: 50%;
-        width: 32px;
-        height: 32px;
+        width: 24px;
+        height: 24px;
         z-index: 1;
         display: flex;
         align-items: center;
