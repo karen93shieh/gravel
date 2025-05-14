@@ -53,26 +53,11 @@
     if (!currentTrip || !tripDates.startDate) return [];
     
     const defaults = tripDefaultActivities[currentTrip] || [];
-    // const day2 = new Date(tripDates.startDate);
-    // day2.setDate(day2.getDate() + 1);
     const day1 = new Date(tripDates.startDate);
     day1.setDate(day1.getDate() + 1);
     const day2 = new Date(day1);
     day2.setDate(day2.getDate() + 1);
     
-    // return defaults.map(activity => {
-    //   const activityDate = activity.dateOffset === 1 ? 
-    //     new Date(day2) : 
-    //     new Date(tripDates.startDate);
-        
-    //   return {
-    //     title: activity.title,
-    //     date: activityDate,
-    //     startHour: activity.startHour,
-    //     endHour: activity.endHour,
-    //     color: activity.color
-    //   };
-    // });
     return defaults.map(activity => {
       const activityDate = activity.dateOffset === 1 ? new Date(day2) : new Date(day1);
       return {
@@ -113,19 +98,15 @@
           console.log("Saved activities from localStorage:", savedActivities);
           activities = savedActivities.map(activity => ({
             ...activity,
-            // date: new Date(activity.date), 
             date: new Date(new Date(activity.date).setDate(new Date(activity.date).getDate() + 1)), // Adjust date to next day
           }));
 
           console.log("Activities from localStorage:", activities);
-          // Only add defaults if no saved activities exist
-          // if (shouldShowDefaults()) {
-            activities = [
-              ...generateDefaultActivities(),
-              ...activities
-            ];
+          activities = [
+            ...generateDefaultActivities(),
+            ...activities
+          ];
             
-          // }
         }
       });
       
@@ -288,12 +269,6 @@
 {/if}
 
 <style>
-  :global(body) {
-    /* margin: 0;
-    font-family: system-ui, sans-serif;
-    background: beige;
-    color: #333; */
-  }
 
   .top-bar {
     display: flex;
@@ -391,14 +366,14 @@
   }
 
   .activity {
-  position: absolute;
-  padding: 0.25rem;
-  color: white;
-  font-size: 0.75rem;
-  border-radius: 4px;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
-}
+    position: absolute;
+    padding: 0.25rem;
+    color: white;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+  }
 
 
   .calendar-grid.day-view .header-row {

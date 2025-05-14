@@ -212,16 +212,16 @@
   </div>
 
   <div class="profile-container">
-  {#if currentTripPeople && currentTripPeople.length > 0}
-    {#each currentTripPeople as person}
-      <div class="profile-card" on:click={() => openProfile(person)}>
-        <img src={person.photo} alt="{person.name}'s photo"  />
-        <h3>{person.name}</h3>
-        <button class="view-profile-button">View Profile</button>
-      </div>
-    {/each}
-  {/if}
-</div>
+    {#if currentTripPeople && currentTripPeople.length > 0}
+      {#each currentTripPeople as person}
+        <div class="profile-card" on:click={() => openProfile(person)}>
+          <img src={person.photo} alt="{person.name}'s photo"  />
+          <h3>{person.name}</h3>
+          <button class="view-profile-button">View Profile</button>
+        </div>
+      {/each}
+    {/if}
+  </div>
 
   {#if showModal}
     <div class="overlay" on:click={closeModal} />

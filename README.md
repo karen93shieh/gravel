@@ -2,17 +2,6 @@
 
 Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
 
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
-```
 
 ## Developing
 
@@ -35,10 +24,9 @@ npm run build
 
 You can preview the production build with `npm run preview`.
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
 
 
-## Installation 
+## Note for CS160: Installation 
 
 To install svelte/kit, run
 ```bash
@@ -50,12 +38,11 @@ To install lucid icon, run
 npm install lucide-svelte
 ```
 
-<!-- To install background effect, run,
+To run the website, in the terminal, run
+
 ```bash
-npm install three
-
-``` -->
-
+npm run dev
+```
 
 ## Documentation for Svelte/kit
 

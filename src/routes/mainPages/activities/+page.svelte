@@ -144,6 +144,14 @@
 
 
     const createActivity = () => {
+        if (newActivity.price < 0 || isNaN(newActivity.price)) {
+            alert('Price is not valid!');
+            return;   
+        }
+        if(newActivity.title == '' || newActivity.description == '' || newActivity.price == '' || newActivity.date == '') {
+            alert('Please fill in all fields!');
+            return;
+        }
         if (newActivity.title && newActivity.description && newActivity.price >= 0 && newActivity.date) {
             // Get trip data to validate date
             let trip;
@@ -174,14 +182,7 @@
             saveActivities();
             showCreatePopup = false;
         }
-        if (newActivity.price < 0 || isNaN(newActivity.price)) {
-            alert('Price is not valid!');
-            return;   
-        }
-        if(newActivity.title == '' || newActivity.description == '' || newActivity.price == '' || newActivity.date == '') {
-            alert('Please fill in all fields!');
-            return;
-        }
+        
     };
     
     const groupActivitiesByDate = (activities) => {
